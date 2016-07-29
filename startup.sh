@@ -1,16 +1,15 @@
 #!/usr/bin/env bash
 
-docker commit  workspace haoliang/workspace
+docker build -t haoliang/workspace .
 
-docker stop workspace
-docker rm workspace
-
-docker run -d \
-    -v $(pwd)/root:/root \
+docker run --rm -it \
+    -v $(pwd)/var/root:/root \
     -v /srv/http:/srv/http \
+    -v $(pwd):/docker \
+    -v $(pwd)/var/tmp:/tmp \
     -w /srv/http \
     --network hub \
     --name workspace \
-    --entrypoint "" \
-    haoliang/workspace
+    haoliang/workspace /bin/bash
 
+# for -d, --entrypoint  workspace-entrypoint.sh \
