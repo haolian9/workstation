@@ -1,0 +1,9 @@
+var/
+
+# vim
+*.un~
+.*.un~
+*.vim
+*.swp
+.netrwhist
+tags
