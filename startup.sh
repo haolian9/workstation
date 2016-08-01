@@ -2,6 +2,7 @@
 
 docker build -t haoliang/workspace .
 
+docker stop workspace
 docker rm workspace
 
 docker run -d \
@@ -10,6 +11,7 @@ docker run -d \
     -v $(pwd):/docker \
     -v $(pwd)/var/tmp:/tmp \
     -w /srv/http \
+    -p "9000:9000" \
     --network hub \
     --name workspace \
     haoliang/workspace

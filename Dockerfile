@@ -33,6 +33,13 @@ RUN pip install mycli
 RUN yes | pacman -Syy \
         && yes | pacman -S --needed shadowsocks proxychains-ng
 
+# xdebug
+RUN yes | pacman -Syy \
+        && yes | pacman -S --needed xdebug
+
+# php config
+COPY ./config/php/php.ini /etc/php/php.ini
+COPY ./config/php/xdebug.ini /etc/php/conf.d/xdebug.ini
 
 RUN yes | pacman -Scc
 
