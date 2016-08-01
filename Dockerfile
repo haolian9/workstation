@@ -18,7 +18,7 @@ RUN yes | pacman -Syy \
 
 # php
 RUN yes | pacman -Syy \
-        && yes | pacman -s --needed php php-gd php-intl php-mcrypt php-docs
+        && yes | pacman -S --needed php php-gd php-intl php-mcrypt php-docs
 
 # tool
 RUN yes | pacman -Syy \
@@ -30,7 +30,11 @@ RUN yes | pacman -Syy \
 
 RUN pip install mycli
 
+RUN yes | pacman -Syy \
+        && yes | pacman -S --needed shadowsocks proxychains-ng
+
 
 RUN yes | pacman -Scc
 
+ENTRYPOINT ["workspace-entrypoint.sh"]
 

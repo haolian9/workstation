@@ -2,7 +2,9 @@
 
 docker build -t haoliang/workspace .
 
-docker run --rm -it \
+docker rm workspace
+
+docker run -d \
     -v $(pwd)/var/root:/root \
     -v /srv/http:/srv/http \
     -v $(pwd):/docker \
@@ -10,6 +12,6 @@ docker run --rm -it \
     -w /srv/http \
     --network hub \
     --name workspace \
-    haoliang/workspace /bin/bash
+    haoliang/workspace
 
-# for -d, --entrypoint  workspace-entrypoint.sh \
+
