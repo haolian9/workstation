@@ -41,6 +41,14 @@ RUN yes | pacman -Syy \
 COPY ./config/php/php.ini /etc/php/php.ini
 COPY ./config/php/xdebug.ini /etc/php/conf.d/xdebug.ini
 
+RUN yes | pacman -Syy \
+        && yes | pacman -S --needed ruby
+
+RUN gem install tmuxinator
+
+RUN yes | pacman -Syy \
+        && yes | pacman -S --needed lsof
+
 RUN yes | pacman -Scc
 
 ENTRYPOINT ["workspace-entrypoint.sh"]
