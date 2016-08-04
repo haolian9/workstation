@@ -49,6 +49,11 @@ RUN gem install tmuxinator
 RUN yes | pacman -Syy \
         && yes | pacman -S --needed lsof
 
+RUN yes | pacman -Syy \
+        && yes | pacman -S --needed jq
+
+RUN pip install httpie
+
 RUN yes | pacman -Scc
 
 ENTRYPOINT ["workspace-entrypoint.sh"]

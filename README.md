@@ -38,7 +38,8 @@ personal contents will locate in:
 notes
 ----
 
-* developping within docker container, I/O is really slow.
+* Developping within a docker container, I/O is really slow.
+* I would rather add new `RUN` command than refactor the former `RUN` command; since image base on image layer, and each `RUN` will create a new image layer.
 
 FAQ
 ----
