@@ -52,6 +52,9 @@ RUN yes | pacman -Syy \
 RUN yes | pacman -Syy \
         && yes | pacman -S --needed jq
 
+RUN yes | pacman -Syy \
+        && yes | pacman -S --needed mariadb-clients
+
 RUN pip install httpie
 
 RUN yes | pacman -Scc
