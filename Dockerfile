@@ -1,10 +1,10 @@
-FROM pritunl/archlinux
+FROM pritunl/archlinux:latest
 
-VOLUME ["/srv/http", "/root", "/tmp"]
+VOLUME ["/srv/http"]
 
 WORKDIR /srv/http
 
-COPY ./workspace-entrypoint.sh /usr/local/bin/workspace-entrypoint.sh
+COPY ./docker-entrypoint.sh /usr/local/bin/docker-entrypoint.sh
 
 COPY ./config/mirrorlist /etc/pacman.d/mirrorlist
 
@@ -27,8 +27,6 @@ RUN yes | pacman -Syy \
         && yes | pacman -S --needed zsh grml-zsh-config tmux \
         && yes | pacman -S --needed git the_silver_searcher autojump fzf \
         && yes | pacman -S --needed openssh openssl
-
-RUN pip install mycli
 
 RUN yes | pacman -Syy \
         && yes | pacman -S --needed shadowsocks proxychains-ng
@@ -55,7 +53,39 @@ RUN yes | pacman -Syy \
 RUN yes | pacman -Syy \
         && yes | pacman -S --needed mariadb-clients
 
+RUN echo '%wheel ALL=(ALL) NOPASSWD: ALL' >> /etc/sudoers
+RUN useradd -m -u 1000 -g users -G wheel haoliang
+RUN yes xx | passwd haoliang
+VOLUME ["/home/haoliang"]
+
+# yaourt
+USER haoliang
+RUN mkdir /tmp/yaourt
+RUN cd /tmp/yaourt \
+        && git clone https://aur.archlinux.org/package-query.git && cd package-query && yes | makepkg -si \
+        && cd /tmp/yaourt && git clone https://aur.archlinux.org/yaourt.git && cd yaourt && yes | makepkg -si
+RUN sudo rm -rf /tmp/yaourt
+# pecl
+RUN yes | yaourt -Syy \
+        && yes | yaourt -S --needed php-pear
+USER root
+
+# swoole
+RUN pecl channel-update pecl.php.net && pecl install swoole
+COPY ./config/php/swoole.ini /etc/php/conf.d/swoole.ini
+
+# composer
+RUN cd /tmp \
+&& php -r "copy('https://getcomposer.org/installer', 'composer-setup.php');" \
+&& php -r "if (hash_file('SHA384', 'composer-setup.php') === 'e115a8dc7871f15d853148a7fbac7da27d6c0030b848d9b3dc09e2a0388afed865e6a3d6b3c0fad45c48e2b5fc1196ae') { echo 'Installer verified'; } else { echo 'Installer corrupt'; unlink('composer-setup.php'); } echo PHP_EOL;" \
+&& php composer-setup.php \
+&& php -r "unlink('composer-setup.php');" \
+&& mv composer.phar /usr/local/bin/composer
+
+# todo so many errors when install python-tool
+#RUN pip install mycli
+
 RUN yes | pacman -Scc
 
-ENTRYPOINT ["workspace-entrypoint.sh"]
+ENTRYPOINT ["docker-entrypoint.sh"]
 

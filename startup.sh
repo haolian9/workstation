@@ -1,19 +1,17 @@
 #!/usr/bin/env bash
 
-docker build -t haoliang/workspace .
+docker build -t haoliang/workstation .
 
-docker stop workspace
-docker rm workspace
+docker stop workstation
+docker rm workstation
 
 docker run -d \
-    -v $(pwd)/var/root:/root \
+    -v $(pwd)/var/haoliang:/home/haoliang \
     -v /srv/http:/srv/http \
     -v $(pwd):/docker \
-    -v $(pwd)/var/tmp:/tmp \
     -w /srv/http \
     -p "9000:9000" \
-    --network hub \
-    --name workspace \
-    haoliang/workspace
-
+    --net=hub \
+    --name workstation \
+    haoliang/workstation
 
