@@ -14,7 +14,10 @@ in use
 why?
 ----
 
-Mac OS is not suit for me. I currently using a macbook pro and can not choose it's OS.
+~~Mac OS is not suit for me. I currently using a macbook pro and can not choose it's OS.~~
+
+Finally, I abandoned MBP. But I found that I can not leave docker.
+
 
 what tools will it takes ?
 ----
@@ -28,6 +31,7 @@ what tools will it takes ?
 * composer
 * shadowsocks
 * proxychains-ng
+* ...
 
 personal contents will locate in:
 ----
@@ -38,7 +42,7 @@ personal contents will locate in:
 notes
 ----
 
-* Developping within a docker container, I/O is really slow.
+* Developping within a docker container, I/O is really slow. ( but in my lenovo laptop mounted with a 5400/s hd, I actually can not feel it; It was occured at MBP I privous used. )
 * I would rather add new `RUN` command than refactor the former `RUN` command; since image base on image layer, and each `RUN` will create a new image layer.
 
 FAQ
