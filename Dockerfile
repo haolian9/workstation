@@ -82,10 +82,26 @@ RUN cd /tmp \
 && php -r "unlink('composer-setup.php');" \
 && mv composer.phar /usr/local/bin/composer
 
-# todo so many errors when install python-tool
-#RUN pip install mycli
+RUN echo "zh_CN.UTF-8 UTF-8" >> /etc/locale.gen && locale-gen
+
+RUN yes | pacman -Syy \
+        && yes | pacman -S php-apcu
+COPY ./config/php/apcu.ini /etc/php/conf.d/apcu.ini
+
+RUN pip install mycli
+
+# tag generator
+RUN yes | pacman -Syy \
+        && yes | pacman -S ctags
+
+RUN curl -Ss http://vim-php.com/phpctags/install/phpctags.phar > /usr/local/bin/phpctags \
+        && chmod +x /usr/local/bin/phpctags
+
+RUN yes | pacman -Syy \
+        && yes | pacman -S whois
 
 RUN yes | pacman -Scc
+RUN rm -rf /tmp/*
 
 ENTRYPOINT ["docker-entrypoint.sh"]
 
