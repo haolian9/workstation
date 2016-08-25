@@ -1,7 +1,5 @@
 #!/usr/bin/env bash
 
-docker build -t haoliang/workstation .
-
 docker stop workstation
 docker rm workstation
 
