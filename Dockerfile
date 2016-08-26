@@ -100,6 +100,9 @@ RUN curl -Ss http://vim-php.com/phpctags/install/phpctags.phar > /usr/local/bin/
 RUN yes | pacman -Syy \
         && yes | pacman -S whois
 
+RUN pecl update-channels && pecl install channel://pecl.php.net/msgpack-2.0.1
+COPY ./config/php/msgpack.ini /etc/php/conf.d/msgpack.ini
+
 RUN yes | pacman -Scc
 RUN rm -rf /tmp/*
 
