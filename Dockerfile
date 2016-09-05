@@ -85,23 +85,35 @@ RUN cd /tmp \
 RUN echo "zh_CN.UTF-8 UTF-8" >> /etc/locale.gen && locale-gen
 
 RUN yes | pacman -Syy \
-        && yes | pacman -S php-apcu
+        && yes | pacman -S --needed php-apcu
 COPY ./config/php/apcu.ini /etc/php/conf.d/apcu.ini
 
 RUN pip install mycli
 
 # tag generator
 RUN yes | pacman -Syy \
-        && yes | pacman -S ctags
+        && yes | pacman -S --needed ctags
 
 RUN curl -Ss http://vim-php.com/phpctags/install/phpctags.phar > /usr/local/bin/phpctags \
         && chmod +x /usr/local/bin/phpctags
 
 RUN yes | pacman -Syy \
-        && yes | pacman -S whois
+        && yes | pacman -S --needed whois
 
 RUN pecl update-channels && pecl install channel://pecl.php.net/msgpack-2.0.1
 COPY ./config/php/msgpack.ini /etc/php/conf.d/msgpack.ini
+
+RUN yes | pacman -Syy \
+        && yes | pacman -S --needed vifm
+
+RUN pecl update-channels && pecl install ds
+
+RUN mkdir -p /opt \
+        && git clone git@github.com:facebook/PathPicker.git pathpicker\
+        ln -s /opt/pathpicker/fpp /usr/local/bin/fpp
+
+RUN yes | pacman -Syy \
+        && yes | pacman -S --needed tree
 
 RUN yes | pacman -Scc
 RUN rm -rf /tmp/*
