@@ -108,8 +108,7 @@ RUN yes | pacman -Syy \
 
 RUN pecl update-channels && pecl install ds
 
-RUN cd /opt \
-        && git clone https://github.com/facebook/PathPicker.git pathpicker\
+RUN git clone https://github.com/facebook/PathPicker.git /opt/pathpicker\
         && ln -s /opt/pathpicker/fpp /usr/local/bin/fpp
 
 RUN yes | pacman -Syy \
