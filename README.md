@@ -45,6 +45,11 @@ notes
 * Developping within a docker container, I/O is really slow. ( but in my lenovo laptop mounted with a 5400/s hd, I actually can not feel it; It was occured at MBP I privous used. )
 * I would rather add new `RUN` command than refactor the former `RUN` command; since image base on image layer, and each `RUN` will create a new image layer.
 
+tips
+----
+
+* ssh "$USERNAME@$HOST_MACHINE_IP" notify-send 'hi from docker-container'
+
 FAQ
 ----
 
