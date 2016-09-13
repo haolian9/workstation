@@ -114,9 +114,13 @@ RUN git clone https://github.com/facebook/PathPicker.git /opt/pathpicker\
 RUN yes | pacman -Syy \
         && yes | pacman -S --needed tree
 
+# ext-mongodb
 RUN yes | pacman -Syy \
         && yes | pacman -S --needed php-mongodb
 COPY ./config/php/mongodb.ini /etc/php/conf.d/mongodb.ini
+
+RUN yes | pacman -Syy \
+        && yes | pacman -S --needed bc
 
 RUN yes | pacman -Scc
 RUN rm -rf /tmp/*
