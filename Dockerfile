@@ -122,6 +122,10 @@ COPY ./config/php/mongodb.ini /etc/php/conf.d/mongodb.ini
 RUN yes | pacman -Syy \
         && yes | pacman -S --needed bc
 
+# mongo shell
+RUN yes | pacman -Syy \
+        && yes | pacman -S --needed mongodb mongodb-tools
+
 RUN yes | pacman -Scc
 RUN rm -rf /tmp/*
 
