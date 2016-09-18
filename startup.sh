@@ -11,7 +11,7 @@ docker run -d \
     -v $(pwd):/docker \
     -w /srv/http \
     -e HOST_MACHINE_IP=$host_machine_ip \
-    -p "9000:9000" \
+    -p "29000:9000" \
     --net=hub \
     --name workstation \
     haoliang/workstation

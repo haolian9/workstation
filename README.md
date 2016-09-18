@@ -56,4 +56,10 @@ FAQ
 * tmux erred: lost server
     * run `$ script` first, before using `tmux`
     * if you did not instantiate the image as daemon, but `docker run --it`, this issue won't occur.
+* how to use xdebug
+    * when you `$ ./startup.sh`:
+        * startup.sh will
+            * inject host machine ip to container an env named HOST_MACHINE_IP
+            * bind container port 9000 to host machine port 29000
+        * docker-entrypoint.sh will change xdebug.remote_host = $HOST_MACHINE_IP
 
