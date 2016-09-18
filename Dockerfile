@@ -121,6 +121,9 @@ RUN yes | pacman -Syy \
 RUN yes | pacman -Syy \
         && yes | pacman -S --needed mongodb mongodb-tools
 
+RUN yes | pacman -Syy \
+        && yes | pacman -S --needed npm
+
 RUN yes | pacman -Scc
 RUN rm -rf /tmp/*
 
