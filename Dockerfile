@@ -124,7 +124,7 @@ RUN yes | pacman -Syy \
 RUN yes | pacman -Syy \
         && yes | pacman -S --needed npm
 
-RUN curl -Ss http://static.phpmd.org/php/latest/phpmd.phar -o /usr/local/bin/phpmd \
+RUN curl -SsL http://static.phpmd.org/php/latest/phpmd.phar -o /usr/local/bin/phpmd \
         && chmod +x /usr/local/bin/phpmd
 
 RUN yes | pacman -Scc
