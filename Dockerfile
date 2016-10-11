@@ -127,6 +127,8 @@ RUN yes | pacman -Syy \
 RUN curl -SsL http://static.phpmd.org/php/latest/phpmd.phar -o /usr/local/bin/phpmd \
         && chmod +x /usr/local/bin/phpmd
 
+RUN pip install tmuxp
+
 RUN yes | pacman -Scc
 RUN rm -rf /tmp/*
 
