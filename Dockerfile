@@ -129,6 +129,8 @@ RUN curl -SsL http://static.phpmd.org/php/latest/phpmd.phar -o /usr/local/bin/ph
 
 RUN pip install tmuxp
 
+VOLUME ["/root"]
+
 RUN yes | pacman -Scc
 RUN rm -rf /tmp/*
 

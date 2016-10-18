@@ -7,6 +7,7 @@ host_machine_ip=$(ip addr show | grep 'inet\b'  | awk '{ print $2 }' | grep -v '
 
 docker run -d \
     -v $(pwd)/var/haoliang:/home/haoliang \
+    -v $(pwd)/var/root:/root \
     -v /srv/http:/srv/http \
     -v $(pwd):/docker \
     -w /srv/http \
