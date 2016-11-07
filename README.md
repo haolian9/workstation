@@ -62,4 +62,6 @@ FAQ
             * inject host machine ip to container an env named HOST_MACHINE_IP
             * bind container port 9000 to host machine port 29000
         * docker-entrypoint.sh will change xdebug.remote_host = $HOST_MACHINE_IP
+* `no permission to read from` when build image
+    * chown/mod ./var/root
 

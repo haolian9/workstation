@@ -131,6 +131,8 @@ RUN pip install tmuxp
 
 VOLUME ["/root"]
 
+RUN ln -sf /usr/share/zoneinfo/Asia/Shanghai /etc/localtime
+
 RUN yes | pacman -Scc
 RUN rm -rf /tmp/*
 
