@@ -71,11 +71,8 @@ COPY ./config/php/swoole.ini /etc/php/conf.d/swoole.ini
 
 # composer
 RUN cd /tmp \
-&& php -r "copy('https://getcomposer.org/installer', 'composer-setup.php');" \
-&& php -r "if (hash_file('SHA384', 'composer-setup.php') === 'e115a8dc7871f15d853148a7fbac7da27d6c0030b848d9b3dc09e2a0388afed865e6a3d6b3c0fad45c48e2b5fc1196ae') { echo 'Installer verified'; } else { echo 'Installer corrupt'; unlink('composer-setup.php'); } echo PHP_EOL;" \
-&& php composer-setup.php \
-&& php -r "unlink('composer-setup.php');" \
-&& mv composer.phar /usr/local/bin/composer
+        && curl -SL "https://getcomposer.org/composer.phar" -o composer.phar \
+        && mv composer.phar /usr/local/bin/composer
 
 RUN echo "zh_CN.UTF-8 UTF-8" >> /etc/locale.gen && locale-gen
 
@@ -132,6 +129,22 @@ RUN pip install tmuxp
 VOLUME ["/root"]
 
 RUN ln -sf /usr/share/zoneinfo/Asia/Shanghai /etc/localtime
+
+# php-ast
+RUN git clone https://github.com/nikic/php-ast.git /tmp/php-ast \
+    && phpize && ./configure && make && make install
+
+RUN curl -L https://github.com/etsy/phan/releases/download/0.6/phan.phar -o /usr/local/bin/phan \
+        && chmod +x /usr/local/bin/phan
+RUN yes | pacman -S php-sqlite
+COPY ./config/php/ast.ini /etc/php/conf.d/ast.ini
+
+RUN git clone https://github.com/paulirish/git-recent.git /opt/git-recent \
+        && ln -s /opt/git-recent/git-recent /usr/local/bin/git-recent \
+        && chmod +x /usr/local/bin/git-recent
+
+RUN yes | pacman -Syy \
+        && yes | pacman -S --needed task
 
 RUN yes | pacman -Scc
 RUN rm -rf /tmp/*
