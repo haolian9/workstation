@@ -132,12 +132,12 @@ RUN ln -sf /usr/share/zoneinfo/Asia/Shanghai /etc/localtime
 
 # php-ast
 RUN git clone https://github.com/nikic/php-ast.git /tmp/php-ast \
-    && phpize && ./configure && make && make install
+    && cd /tmp/php-ast && phpize && ./configure && make && make install
 
-RUN curl -L https://github.com/etsy/phan/releases/download/0.6/phan.phar -o /usr/local/bin/phan \
-        && chmod +x /usr/local/bin/phan
 RUN yes | pacman -S php-sqlite
-COPY ./config/php/ast.ini /etc/php/conf.d/ast.ini
+#RUN curl -L https://github.com/etsy/phan/releases/download/0.6/phan.phar -o /usr/local/bin/phan \
+#        && chmod +x /usr/local/bin/phan
+#COPY ./config/php/ast.ini /etc/php/conf.d/ast.ini
 
 RUN git clone https://github.com/paulirish/git-recent.git /opt/git-recent \
         && ln -s /opt/git-recent/git-recent /usr/local/bin/git-recent \
