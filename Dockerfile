@@ -146,6 +146,9 @@ RUN git clone https://github.com/paulirish/git-recent.git /opt/git-recent \
 RUN yes | pacman -Syy \
         && yes | pacman -S --needed task
 
+RUN yes | pacman -Syy \
+        && yes | pacman -S --needed php-pgsql
+
 RUN yes | pacman -Scc
 RUN rm -rf /tmp/*
 
