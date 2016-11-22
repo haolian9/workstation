@@ -71,8 +71,8 @@ COPY ./config/php/swoole.ini /etc/php/conf.d/swoole.ini
 
 # composer
 RUN cd /tmp \
-        && curl -SL "https://getcomposer.org/composer.phar" -o composer.phar \
-        && mv composer.phar /usr/local/bin/composer
+        && curl -SL "https://getcomposer.org/composer.phar" -o /usr/local/bin/composer \
+        && chmod +x /usr/local/bin/composer
 
 RUN echo "zh_CN.UTF-8 UTF-8" >> /etc/locale.gen && locale-gen
 
