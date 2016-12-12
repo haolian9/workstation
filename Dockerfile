@@ -149,6 +149,12 @@ RUN yes | pacman -Syy \
 RUN yes | pacman -Syy \
         && yes | pacman -S --needed php-pgsql
 
+RUN yes | pacman -Syy \
+        && yes | pacman -S --needed p7zip
+
+RUN curl -SL 'https://github.com/simeji/jid/releases/download/0.6.1/jid_linux_amd64.zip' -o /tmp/jid.zip \
+    && cd /tmp && 7z e jid.zip && mv jid_linux_amd64 /usr/local/bin/jid && chmod +x /usr/local/bin/jid
+
 RUN yes | pacman -Scc
 RUN rm -rf /tmp/*
 
