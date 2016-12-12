@@ -155,6 +155,8 @@ RUN yes | pacman -Syy \
 RUN curl -SL 'https://github.com/simeji/jid/releases/download/0.6.1/jid_linux_amd64.zip' -o /tmp/jid.zip \
     && cd /tmp && 7z e jid.zip && mv jid_linux_amd64 /usr/local/bin/jid && chmod +x /usr/local/bin/jid
 
+COPY ./config/php/ds.ini /etc/php/conf.d/ds.ini
+
 RUN yes | pacman -Scc
 RUN rm -rf /tmp/*
 
