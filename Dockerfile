@@ -92,7 +92,7 @@ RUN curl -Ss http://vim-php.com/phpctags/install/phpctags.phar > /usr/local/bin/
 RUN yes | pacman -Syy \
         && yes | pacman -S --needed whois
 
-RUN pecl update-channels && pecl install channel://pecl.php.net/msgpack-2.0.1
+RUN pecl update-channels && pecl install channel://pecl.php.net/msgpack-2.0.2
 COPY ./config/php/msgpack.ini /etc/php/conf.d/msgpack.ini
 
 RUN yes | pacman -Syy \
@@ -156,6 +156,12 @@ RUN curl -SL 'https://github.com/simeji/jid/releases/download/0.6.1/jid_linux_am
     && cd /tmp && 7z e jid.zip && mv jid_linux_amd64 /usr/local/bin/jid && chmod +x /usr/local/bin/jid
 
 COPY ./config/php/ds.ini /etc/php/conf.d/ds.ini
+
+# zookeeper
+#RUN yaourt --noconfirm -Syu \
+#        && yaourt -S --noconfirm zookeeper
+
+RUN pecl channel-update pecl.php.net && pecl install channel://pecl.php.net/ssh2-1.0
 
 RUN yes | pacman -Scc
 RUN rm -rf /tmp/*
