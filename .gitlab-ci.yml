@@ -3,6 +3,6 @@
 hello-world:
 
     script:
-        - bash echo 'hello'
+        - echo 'hello'
         - pwd
 
