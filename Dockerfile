@@ -58,7 +58,7 @@ RUN yaourt -Syy --noconfirm && yaourt -S --noconfirm --needed \
     php-pear
 USER root
 
-RUN pecl channel-update pecl.php.net && pecl install \
+RUN pecl update-channels && pecl install \
         swoole \
         channel://pecl.php.net/msgpack-$PHP_EXT_MSGPACK_VERSION \
         ds \
@@ -107,7 +107,6 @@ RUN pacman -Syy --noconfirm && pacman -S --noconfirm --needed \
 USER $MY_USERNAME
 RUN yaourt -Syy --noconfirm && yaourt -S --noconfirm --needed \
         universal-ctags-git
-#       zookeeper
 USER root
 
 RUN cp -r /tmp/pathpicker /opt/pathpicker \
