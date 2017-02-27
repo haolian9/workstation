@@ -5,4 +5,7 @@ hello-world:
     script:
         - echo 'hello'
         - pwd
+        - whoami
+        - echo $SHELL
+        - echo $0
 
