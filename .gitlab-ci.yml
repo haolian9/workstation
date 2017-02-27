@@ -8,4 +8,10 @@ hello-world:
         - whoami
         - echo $SHELL
         - echo $0
+        - 'echo "running bash script.";
+          if [ -d /tmp ];
+            then echo "exists";
+          else
+            echo "not exists";
+          fi'
 
