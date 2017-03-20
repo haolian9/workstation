@@ -1,3 +1,7 @@
+#
+# todo
+# * php-pear install from aur
+#
 
 FROM pritunl/archlinux:latest
 
@@ -53,9 +57,9 @@ RUN pacman -Syy --noconfirm && pacman -S --noconfirm --needed \
         php-mongodb
 
 
+RUN chown $MY_USERNAME:root /tmp/php-pear
 USER $MY_USERNAME
-RUN yaourt -Syy --noconfirm && yaourt -S --noconfirm --needed \
-    php-pear
+RUN cd /tmp/php-pear && makepkg -si --noconfirm
 USER root
 
 RUN pecl update-channels && pecl install \

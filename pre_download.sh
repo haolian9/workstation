@@ -36,25 +36,36 @@ function download
 function clone
 { #{{{
 
-    git clone https://aur.archlinux.org/package-query.git \
+    git clone --depth 1 https://aur.archlinux.org/package-query.git \
         package-query
 
-    git clone https://aur.archlinux.org/yaourt.git \
+    git clone --depth 1 https://aur.archlinux.org/yaourt.git \
         yaourt
 
-    git clone https://github.com/facebook/PathPicker.git \
+    git clone --depth 1 https://aur.archlinux.org/php-pear.git \
+        php-pear \
+        && sed -i 's/64d0cee159de5655e0fadc54b89c34f9/0c3206e8d443c32ae5b938f2d7fa4589/' \
+        php-pear/PKGBUILD
+
+    git clone --depth 1 https://github.com/facebook/PathPicker.git \
         pathpicker
 
-    git clone https://github.com/paulirish/git-recent.git \
+    git clone --depth 1 https://github.com/paulirish/git-recent.git \
         git-recent
 
-    git clone https://github.com/nikic/php-ast.git \
+    git clone --depth 1 https://github.com/nikic/php-ast.git \
         php-ast
 
 } #}}}
 
 function main
 { #{{{
+
+
+    if [ -z "$@" ]; then
+        echo "usage: ${0} download clone"
+        return 0;
+    fi
 
     if [ \( ! -d "$store_dir" \) -o \( ! -w "$store_dir" \) ]; then
         mkdir "$store_dir"
@@ -66,10 +77,13 @@ function main
 
     cd $store_dir
 
-    download
+    for i in "$@"; do
+        $i;
+    done
 
-    clone
+    #download
+    #clone
 
 } #}}}
 
-main
+main $@
