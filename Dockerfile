@@ -106,7 +106,8 @@ RUN pacman -Syy --noconfirm && pacman -S --noconfirm --needed \
         bc \
         mongodb mongodb-tools \
         npm \
-        p7zip
+        p7zip \
+        dos2unix
 
 USER $MY_USERNAME
 RUN yaourt -Syy --noconfirm && yaourt -S --noconfirm --needed \
