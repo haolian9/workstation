@@ -56,6 +56,9 @@ function clone
     git clone --depth 1 https://github.com/nikic/php-ast.git \
         php-ast
 
+    git clone --depth 1 https://github.com/laruence/yac.git \
+        php-yac
+
 } #}}}
 
 function main

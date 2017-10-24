@@ -68,10 +68,14 @@ RUN pecl update-channels && pecl install \
         ds \
         channel://pecl.php.net/ssh2-$PHP_EXT_SSH_VERSION
 
+# tool
 RUN cp /tmp/composer.phar /usr/local/bin/composer && chmod +x /usr/local/bin/composer
 RUN cp /tmp/phpmd.phar /usr/local/bin/phpmd && chmod +x /usr/local/bin/phpmd
-RUN cd /tmp/php-ast && phpize && ./configure && make && make install
 RUN cp /tmp/phan.phar /usr/local/bin/phan && chmod +x /usr/local/bin/phan
+
+# modules can not install by pecl
+RUN cd /tmp/php-ast && phpize && ./configure && make && make install
+RUN cd /tmp/php-yac && phpize && ./configure && make && make install
 
 COPY ./config/php/php.ini /etc/php/php.ini
 COPY ./config/php/ext/    /etc/php/conf.d/
