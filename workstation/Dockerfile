@@ -10,6 +10,13 @@ ENV MY_PASSWD=xx
 ENV PHP_EXT_MSGPACK_VERSION=2.0.2
 ENV PHP_EXT_SSH_VERSION=1.0
 
+# ref https://github.com/github/hub/releases
+ENV HUB_VERSION="2.2.9"
+# ref https://github.com/simeji/jid/releases
+ENV JID_VERSION="0.7.2"
+# ref https://github.com/etsy/phan/releases
+ENV PHAN_VERSION="0.8.3"
+
 COPY ./var/pre_download /tmp/
 COPY ./docker-entrypoint.sh /usr/local/bin/docker-entrypoint.sh
 COPY ./config/mirrorlist /etc/pacman.d/mirrorlist
@@ -32,9 +39,11 @@ RUN pacman -Syy --noconfirm \
 
 # pacman -S base-devel
 RUN pacman -Syy --noconfirm \
-        && pacman -S --noconfirm --needed autoconf automake binutils bison fakeroot file findutils flex gawk gcc gettext grep groff gzip libtool m4 make pacman patch pkg-config sed sudo texinfo util-linux which
+    && pacman -S --noconfirm --needed autoconf automake binutils bison fakeroot file findutils flex gawk gcc gettext grep groff gzip libtool m4 make pacman patch pkg-config sed sudo texinfo util-linux which
 
-RUN chown $MY_USERNAME:root /tmp/{package-query,yaourt}
+RUN cd /tmp && git clone --depth 1 https://aur.archlinux.org/package-query.git package-query \
+    && git clone --depth 1 https://aur.archlinux.org/yaourt.git yaourt
+RUN chown -R $MY_USERNAME:root /tmp/{package-query,yaourt}
 USER $MY_USERNAME
 RUN cd /tmp/package-query && makepkg -si --noconfirm \
         && cd /tmp/yaourt && makepkg -si --noconfirm
@@ -57,7 +66,10 @@ RUN pacman -Syy --noconfirm && pacman -S --noconfirm --needed \
         php-mongodb
 
 
-RUN chown $MY_USERNAME:root /tmp/php-pear
+
+RUN cd /tmp && git clone --depth 1 https://aur.archlinux.org/php-pear.git php-pear \
+    && sed -i 's/64d0cee159de5655e0fadc54b89c34f9/0c3206e8d443c32ae5b938f2d7fa4589/' php-pear/PKGBUILD
+RUN chown -R $MY_USERNAME:root /tmp/php-pear
 USER $MY_USERNAME
 RUN cd /tmp/php-pear && makepkg -si --noconfirm
 USER root
@@ -69,13 +81,22 @@ RUN pecl update-channels && pecl install \
         channel://pecl.php.net/ssh2-$PHP_EXT_SSH_VERSION
 
 # tool
-RUN cp /tmp/composer.phar /usr/local/bin/composer && chmod +x /usr/local/bin/composer
-RUN cp /tmp/phpmd.phar /usr/local/bin/phpmd && chmod +x /usr/local/bin/phpmd
-RUN cp /tmp/phan.phar /usr/local/bin/phan && chmod +x /usr/local/bin/phan
+RUN cd /tmp && curl -SL "https://getcomposer.org/composer.phar" -o composer.phar \
+    && cp composer.phar /usr/local/bin/composer && chmod +x /usr/local/bin/composer
+
+RUN cd /tmp && curl -SsL "http://static.phpmd.org/php/latest/phpmd.phar" -o phpmd.phar \
+    && cp phpmd.phar /usr/local/bin/phpmd && chmod +x /usr/local/bin/phpmd
+
+RUN cd /tmp && curl -L "https://github.com/etsy/phan/releases/download/$PHAN_VERSION/phan.phar" -o phan.phar \
+    && cp phan.phar /usr/local/bin/phan && chmod +x /usr/local/bin/phan
 
 # modules can not install by pecl
-RUN cd /tmp/php-ast && phpize && ./configure && make && make install
-RUN cd /tmp/php-yac && phpize && ./configure && make && make install
+
+RUN cd /tmp && git clone --depth 1 https://github.com/nikic/php-ast.git php-ast \
+    && cd php-ast && phpize && ./configure && make && make install
+
+RUN cd /tmp && git clone --depth 1 https://github.com/laruence/yac.git php-yac \
+    && cd php-yac && phpize && ./configure && make && make install
 
 COPY ./config/php/php.ini /etc/php/php.ini
 COPY ./config/php/ext/    /etc/php/conf.d/
@@ -118,18 +139,20 @@ RUN yaourt -Syy --noconfirm && yaourt -S --noconfirm --needed \
         universal-ctags-git
 USER root
 
-RUN cp -r /tmp/pathpicker /opt/pathpicker \
-        && ln -s /opt/pathpicker/fpp /usr/local/bin/fpp \
-        && chmod +x /usr/local/bin/fpp
+# tools can not be installed by pacman
 
-RUN cp -r /tmp/git-recent /opt/git-recent \
-        && ln -s /opt/git-recent/git-recent /usr/local/bin/git-recent \
-        && chmod +x /usr/local/bin/git-recent
+RUN git clone --depth 1 https://github.com/facebook/PathPicker.git /opt/pathpicker \
+    && ln -s /opt/pathpicker/fpp /usr/local/bin/fpp && chmod +x /usr/local/bin/fpp
 
-RUN cp -r /tmp/jid /usr/local/bin/jid \
-    && chmod +x /usr/local/bin/jid
+RUN git clone --depth 1 https://github.com/paulirish/git-recent.git /opt/git-recent
+    && ln -s /opt/git-recent/git-recent /usr/local/bin/git-recent && chmod +x /usr/local/bin/git-recent
 
-RUN /tmp/hub/install
+RUN cd /tmp && curl -SLO "https://github.com/simeji/jid/releases/download/$JID_VERSION/jid_linux_amd64.zip" \
+    && 7z x jid_linux_amd64.zip && cd jid_linux_amd64 \
+    && cp jid /usr/local/bin/jid && chmod +x /usr/local/bin/jid
+
+RUN cd /tmp && curl -SL "https://github.com/github/hub/releases/download/v$HUB_VERSION/hub-linux-amd64-$HUB_VERSION.tgz" | tar xzf - \
+    && hub-linux-amd64-$HUB_VERSION/install
 
 RUN pip install mycli
 
