@@ -150,8 +150,8 @@ RUN git clone --depth 1 https://github.com/paulirish/git-recent.git /opt/git-rec
     && ln -s /opt/git-recent/git-recent /usr/local/bin/git-recent && chmod +x /usr/local/bin/git-recent
 
 RUN cd /tmp && curl -SLO "https://github.com/simeji/jid/releases/download/$JID_VERSION/jid_linux_amd64.zip" \
-    && 7z x jid_linux_amd64.zip && cd jid_linux_amd64 \
-    && cp jid /usr/local/bin/jid && chmod +x /usr/local/bin/jid
+    && 7z x jid_linux_amd64.zip \
+    && cp jid_linux_amd64 /usr/local/bin/jid && chmod +x /usr/local/bin/jid
 
 RUN cd /tmp && curl -SL "https://github.com/github/hub/releases/download/v$HUB_VERSION/hub-linux-amd64-$HUB_VERSION.tgz" | tar xzf - \
     && hub-linux-amd64-$HUB_VERSION/install
