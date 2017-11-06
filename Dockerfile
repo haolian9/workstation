@@ -17,7 +17,6 @@ ENV JID_VERSION="0.7.2"
 # ref https://github.com/etsy/phan/releases
 ENV PHAN_VERSION="0.8.3"
 
-COPY ./var/pre_download /tmp/
 COPY ./docker-entrypoint.sh /usr/local/bin/docker-entrypoint.sh
 COPY ./config/mirrorlist /etc/pacman.d/mirrorlist
 
@@ -41,10 +40,14 @@ RUN pacman -Syy --noconfirm \
 RUN pacman -Syy --noconfirm \
     && pacman -S --noconfirm --needed autoconf automake binutils bison fakeroot file findutils flex gawk gcc gettext grep groff gzip libtool m4 make pacman patch pkg-config sed sudo texinfo util-linux which
 
+# git, curl
+RUN pacman -Syy --noconfirm && pacman -S --noconfirm --needed \
+    git \
+    curl
+
+USER $MY_USERNAME
 RUN cd /tmp && git clone --depth 1 https://aur.archlinux.org/package-query.git package-query \
     && git clone --depth 1 https://aur.archlinux.org/yaourt.git yaourt
-RUN chown -R $MY_USERNAME:root /tmp/{package-query,yaourt}
-USER $MY_USERNAME
 RUN cd /tmp/package-query && makepkg -si --noconfirm \
         && cd /tmp/yaourt && makepkg -si --noconfirm
 USER root
@@ -114,7 +117,6 @@ RUN pacman -Syy --noconfirm && pacman -S --noconfirm --needed \
         zsh \
         grml-zsh-config \
         tmux \
-        git \
         the_silver_searcher \
         autojump \
         fzf \
@@ -144,7 +146,7 @@ USER root
 RUN git clone --depth 1 https://github.com/facebook/PathPicker.git /opt/pathpicker \
     && ln -s /opt/pathpicker/fpp /usr/local/bin/fpp && chmod +x /usr/local/bin/fpp
 
-RUN git clone --depth 1 https://github.com/paulirish/git-recent.git /opt/git-recent
+RUN git clone --depth 1 https://github.com/paulirish/git-recent.git /opt/git-recent \
     && ln -s /opt/git-recent/git-recent /usr/local/bin/git-recent && chmod +x /usr/local/bin/git-recent
 
 RUN cd /tmp && curl -SLO "https://github.com/simeji/jid/releases/download/$JID_VERSION/jid_linux_amd64.zip" \
