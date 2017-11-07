@@ -134,7 +134,9 @@ RUN pacman -Syy --noconfirm && pacman -S --noconfirm --needed \
         mongodb mongodb-tools \
         npm \
         p7zip \
-        dos2unix
+        dos2unix \
+        traceroute \
+        bind-tools
 
 USER $MY_USERNAME
 RUN yaourt -Syy --noconfirm && yaourt -S --noconfirm --needed \
