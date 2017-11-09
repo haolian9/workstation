@@ -136,7 +136,9 @@ RUN pacman -Syy --noconfirm && pacman -S --noconfirm --needed \
         p7zip \
         dos2unix \
         traceroute \
-        bind-tools
+        bind-tools \
+        tcpdump \
+        sysstat
 
 USER $MY_USERNAME
 RUN yaourt -Syy --noconfirm && yaourt -S --noconfirm --needed \
