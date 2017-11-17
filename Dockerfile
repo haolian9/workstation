@@ -16,6 +16,8 @@ ENV HUB_VERSION="2.2.9"
 ENV JID_VERSION="0.7.2"
 # ref https://github.com/etsy/phan/releases
 ENV PHAN_VERSION="0.8.3"
+# ref https://github.com/phpstan/phpstan/releases
+ENV PHPSTAN_VERSION="0.8.5"
 
 COPY ./docker-entrypoint.sh /usr/local/bin/docker-entrypoint.sh
 COPY ./config/mirrorlist /etc/pacman.d/mirrorlist
@@ -84,14 +86,17 @@ RUN pecl update-channels && pecl install \
         channel://pecl.php.net/ssh2-$PHP_EXT_SSH_VERSION
 
 # tool
-RUN cd /tmp && curl -SL "https://getcomposer.org/composer.phar" -o composer.phar \
-    && cp composer.phar /usr/local/bin/composer && chmod +x /usr/local/bin/composer
+RUN curl -SL "https://getcomposer.org/composer.phar" -o /usr/local/bin/composer \
+    && chmod +x /usr/local/bin/composer
 
-RUN cd /tmp && curl -SsL "http://static.phpmd.org/php/latest/phpmd.phar" -o phpmd.phar \
-    && cp phpmd.phar /usr/local/bin/phpmd && chmod +x /usr/local/bin/phpmd
+RUN curl -SsL "http://static.phpmd.org/php/latest/phpmd.phar" -o /usr/local/bin/phpmd \
+    && chmod +x /usr/local/bin/phpmd
 
-RUN cd /tmp && curl -L "https://github.com/etsy/phan/releases/download/$PHAN_VERSION/phan.phar" -o phan.phar \
-    && cp phan.phar /usr/local/bin/phan && chmod +x /usr/local/bin/phan
+RUN curl -L "https://github.com/etsy/phan/releases/download/$PHAN_VERSION/phan.phar" -o /usr/local/bin/phan \
+    && chmod +x /usr/local/bin/phan
+
+RUN curl -L "https://github.com/phpstan/phpstan/releases/download/$PHPSTAN_VERSION/phpstan.phar"-o /usr/local/bin/phpstan \
+    && chmod +x /usr/local/bin/phpstan
 
 # modules can not install by pecl
 
