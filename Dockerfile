@@ -95,7 +95,7 @@ RUN curl -SsL "http://static.phpmd.org/php/latest/phpmd.phar" -o /usr/local/bin/
 RUN curl -L "https://github.com/etsy/phan/releases/download/$PHAN_VERSION/phan.phar" -o /usr/local/bin/phan \
     && chmod +x /usr/local/bin/phan
 
-RUN curl -L "https://github.com/phpstan/phpstan/releases/download/$PHPSTAN_VERSION/phpstan.phar"-o /usr/local/bin/phpstan \
+RUN curl -L "https://github.com/phpstan/phpstan/releases/download/$PHPSTAN_VERSION/phpstan.phar" -o /usr/local/bin/phpstan \
     && chmod +x /usr/local/bin/phpstan
 
 # modules can not install by pecl
