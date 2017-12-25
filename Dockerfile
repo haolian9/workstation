@@ -143,7 +143,8 @@ RUN pacman -Syy --noconfirm && pacman -S --noconfirm --needed \
         traceroute \
         bind-tools \
         tcpdump \
-        sysstat
+        sysstat \
+        socat
 
 USER $MY_USERNAME
 RUN yaourt -Syy --noconfirm && yaourt -S --noconfirm --needed \
