@@ -3,7 +3,7 @@
 # * php-pear install from aur
 #
 
-FROM pritunl/archlinux:latest
+FROM archlinux/base:latest
 
 ENV MY_USERNAME=haoliang
 ENV MY_PASSWD=xx
@@ -25,6 +25,8 @@ COPY ./config/mirrorlist /etc/pacman.d/mirrorlist
 # {{{ 基本环境
 
 # {{{ create a normal user
+RUN pacman -Syy --noconfirm \
+    && pacman -S --noconfirm --needed sudo
 RUN echo '%wheel ALL=(ALL) NOPASSWD: ALL' >> /etc/sudoers
 RUN useradd -m -u 1000 -g users -G wheel $MY_USERNAME
 RUN yes $MY_PASSWD | passwd $MY_USERNAME
@@ -60,17 +62,13 @@ USER root
 
 RUN pacman -Syy --noconfirm && pacman -S --noconfirm --needed \
         php \
+        xdebug \
         php-gd \
         php-intl \
-        php-mcrypt \
-        php-docs \
-        xdebug \
         php-pgsql \
         php-apcu \
         php-sqlite \
         php-mongodb
-
-
 
 RUN cd /tmp && git clone --depth 1 https://aur.archlinux.org/php-pear.git php-pear \
     && sed -i 's/64d0cee159de5655e0fadc54b89c34f9/0c3206e8d443c32ae5b938f2d7fa4589/' php-pear/PKGBUILD
