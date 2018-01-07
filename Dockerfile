@@ -39,20 +39,31 @@ RUN echo "zh_CN.UTF-8 UTF-8" >> /etc/locale.gen && locale-gen
 
 # pacman -S base
 RUN pacman -Syy --noconfirm \
-        && pacman -S --noconfirm --needed bash bzip2 coreutils cryptsetup device-mapper dhcpcd diffutils e2fsprogs file filesystem findutils gawk gcc-libs gettext glibc grep gzip inetutils iproute2 iputils jfsutils less licenses linux logrotate lvm2 man-db man-pages mdadm nano netctl pacman pciutils pcmciautils perl procps-ng psmisc reiserfsprogs s-nail sed shadow sysfsutils systemd-sysvcompat tar texinfo usbutils util-linux vi which xfsprogs
+    && pacman -S --noconfirm --needed \
+    bash bzip2 coreutils cryptsetup \
+    diffutils file filesystem findutils gawk gcc-libs gettext glibc \
+    grep gzip inetutils iproute2 iputils jfsutils less licenses man-db man-pages \
+    pacman perl procps-ng psmisc reiserfsprogs \
+    sed shadow sysfsutils tar texinfo \
+    device-mapper linux logrotate \
+    util-linux which
 
 # pacman -S base-devel
 RUN pacman -Syy --noconfirm \
-    && pacman -S --noconfirm --needed autoconf automake binutils bison fakeroot file findutils flex gawk gcc gettext grep groff gzip libtool m4 make pacman patch pkg-config sed sudo texinfo util-linux which
+    && pacman -S --noconfirm --needed \
+    autoconf automake binutils bison fakeroot file findutils \
+    gawk gcc gettext grep groff \
+    gzip libtool m4 make pacman patch sed sudo texinfo util-linux which
 
 # git, curl
-RUN pacman -Syy --noconfirm && pacman -S --noconfirm --needed \
+RUN pacman -Syy --noconfirm \
+    && pacman -S --noconfirm --needed \
     git \
     curl
 
 USER $MY_USERNAME
 RUN gpg --recv-keys --keyserver hkp://pgp.mit.edu 1EB2638FF56C0C53
-RUN cd /tmp && git clone --depth 1 https://aur.archlinux.org/cower.git cower \
+RUN cd /tmp && git clone --depth 1 https://aur.archlinux.org/cower-git.git cower \
     && cd cower && makepkg $(echo $MY_PKGMAKE_OPT)
 USER root
 
@@ -72,7 +83,7 @@ RUN pacman -Syy --noconfirm && pacman -S --noconfirm --needed \
 
 USER $MY_USERNAME
 RUN cd /tmp && cower -d php-pear \
-    && cd php-pear && makepkg $(echo MY_PKGMAKE_OPT)
+    && cd php-pear && makepkg $(echo $MY_PKGMAKE_OPT)
 USER root
 
 RUN pecl update-channels && pecl install \
@@ -123,8 +134,6 @@ RUN pacman -Syy --noconfirm && pacman -S --noconfirm --needed \
     fzf \
     openssh \
     openssl \
-    shadowsocks \
-    proxychains-ng \
     lsof \
     jq \
     mariadb-clients \
@@ -132,8 +141,6 @@ RUN pacman -Syy --noconfirm && pacman -S --noconfirm --needed \
     vifm \
     tree \
     bc \
-    mongodb mongodb-tools \
-    npm \
     p7zip \
     dos2unix \
     traceroute \
@@ -147,13 +154,11 @@ RUN cd /tmp && cower -d universal-ctags-git \
     && cd universal-ctags-git && makepkg $(echo $MY_PKGMAKE_OPT)
 RUN cd /tmp && cower -d fpp-git \
     && cd fpp-git && makepkg $(echo $MY_PKGMAKE_OPT)
+RUN cd /tmp && cower -d fpp-git \
+    && cd fpp-git && makepkg $(echo $MY_PKGMAKE_OPT)
 USER root
 
 # tools can not be installed by pacman
-
-# todo remove
-RUN git clone --depth 1 https://github.com/facebook/PathPicker.git /opt/pathpicker \
-    && ln -s /opt/pathpicker/fpp /usr/local/bin/fpp && chmod +x /usr/local/bin/fpp
 
 RUN git clone --depth 1 https://github.com/paulirish/git-recent.git /opt/git-recent \
     && ln -s /opt/git-recent/git-recent /usr/local/bin/git-recent && chmod +x /usr/local/bin/git-recent
