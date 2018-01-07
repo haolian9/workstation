@@ -46,7 +46,7 @@ RUN pacman -Syy --noconfirm \
     pacman perl procps-ng psmisc reiserfsprogs \
     sed shadow sysfsutils tar texinfo \
     device-mapper linux logrotate \
-    util-linux which
+    util-linux which pkg-config
 
 # pacman -S base-devel
 RUN pacman -Syy --noconfirm \
