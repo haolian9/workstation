@@ -154,8 +154,6 @@ RUN cd /tmp && cower -d universal-ctags-git \
     && cd universal-ctags-git && makepkg $(echo $MY_PKGMAKE_OPT)
 RUN cd /tmp && cower -d fpp-git \
     && cd fpp-git && makepkg $(echo $MY_PKGMAKE_OPT)
-RUN cd /tmp && cower -d fpp-git \
-    && cd fpp-git && makepkg $(echo $MY_PKGMAKE_OPT)
 USER root
 
 # tools can not be installed by pacman
