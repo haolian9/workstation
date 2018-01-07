@@ -7,6 +7,7 @@ FROM archlinux/base:latest
 
 ENV MY_USERNAME=haoliang
 ENV MY_PASSWD=xx
+ENV MY_PKGMAKE_OPT="-sirc --noconfirm --needed"
 ENV PHP_EXT_MSGPACK_VERSION=2.0.2
 ENV PHP_EXT_SSH_VERSION=1.0
 
@@ -50,10 +51,8 @@ RUN pacman -Syy --noconfirm && pacman -S --noconfirm --needed \
     curl
 
 USER $MY_USERNAME
-RUN cd /tmp && git clone --depth 1 https://aur.archlinux.org/package-query.git package-query \
-    && git clone --depth 1 https://aur.archlinux.org/yaourt.git yaourt
-RUN cd /tmp/package-query && makepkg -si --noconfirm \
-        && cd /tmp/yaourt && makepkg -si --noconfirm
+RUN cd /tmp && git clone --depth 1 https://aur.archlinux.org/cower.git cower \
+    && cd cower && makepkg $(echo $MY_PKGMAKE_OPT)
 USER root
 
 # }}}
@@ -61,20 +60,18 @@ USER root
 # {{{ php
 
 RUN pacman -Syy --noconfirm && pacman -S --noconfirm --needed \
-        php \
-        xdebug \
-        php-gd \
-        php-intl \
-        php-pgsql \
-        php-apcu \
-        php-sqlite \
-        php-mongodb
+    php \
+    xdebug \
+    php-gd \
+    php-intl \
+    php-pgsql \
+    php-apcu \
+    php-sqlite \
+    php-mongodb
 
-RUN cd /tmp && git clone --depth 1 https://aur.archlinux.org/php-pear.git php-pear \
-    && sed -i 's/64d0cee159de5655e0fadc54b89c34f9/0c3206e8d443c32ae5b938f2d7fa4589/' php-pear/PKGBUILD
-RUN chown -R $MY_USERNAME:root /tmp/php-pear
 USER $MY_USERNAME
-RUN cd /tmp/php-pear && makepkg -si --noconfirm
+RUN cd /tmp && cower -d php-pear \
+    && cd php-pear && makepkg $(echo MY_PKGMAKE_OPT)
 USER root
 
 RUN pecl update-channels && pecl install \
@@ -112,45 +109,48 @@ COPY ./config/php/ext/    /etc/php/conf.d/
 # {{{ tools
 
 RUN pacman -Syy --noconfirm && pacman -S --noconfirm --needed \
-        vim \
-        neovim \
-        python \
-        python-neovim \
-        python-pip \
-        zsh \
-        grml-zsh-config \
-        tmux \
-        the_silver_searcher \
-        autojump \
-        fzf \
-        openssh \
-        openssl \
-        shadowsocks \
-        proxychains-ng \
-        lsof \
-        jq \
-        mariadb-clients \
-        whois \
-        vifm \
-        tree \
-        bc \
-        mongodb mongodb-tools \
-        npm \
-        p7zip \
-        dos2unix \
-        traceroute \
-        bind-tools \
-        tcpdump \
-        sysstat \
-        socat
+    vim \
+    neovim \
+    python \
+    python-neovim \
+    python-pip \
+    zsh \
+    grml-zsh-config \
+    tmux \
+    the_silver_searcher \
+    autojump \
+    fzf \
+    openssh \
+    openssl \
+    shadowsocks \
+    proxychains-ng \
+    lsof \
+    jq \
+    mariadb-clients \
+    whois \
+    vifm \
+    tree \
+    bc \
+    mongodb mongodb-tools \
+    npm \
+    p7zip \
+    dos2unix \
+    traceroute \
+    bind-tools \
+    tcpdump \
+    sysstat \
+    socat
 
 USER $MY_USERNAME
-RUN yaourt -Syy --noconfirm && yaourt -S --noconfirm --needed \
-        universal-ctags-git
+RUN cd /tmp && cower -d universal-ctags-git \
+    && cd universal-ctags-git && makepkg $(echo $MY_PKGMAKE_OPT)
+RUN cd /tmp && cower -d fpp-git \
+    && cd fpp-git && makepkg $(echo $MY_PKGMAKE_OPT)
 USER root
 
 # tools can not be installed by pacman
 
+# todo remove
 RUN git clone --depth 1 https://github.com/facebook/PathPicker.git /opt/pathpicker \
     && ln -s /opt/pathpicker/fpp /usr/local/bin/fpp && chmod +x /usr/local/bin/fpp
 
@@ -178,6 +178,8 @@ RUN rm -rf /tmp/*
 VOLUME ["/srv/http"]
 VOLUME ["/root"]
 VOLUME ["/home/$MY_USERNAME"]
+
+RUN unset MY_USERNAME MY_PASSWD MY_PKGMAKE_OPT
 
 WORKDIR /srv/http
 
