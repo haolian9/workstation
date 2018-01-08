@@ -18,7 +18,6 @@ docker run -d \
     -w /srv/http \
     -e XDEBUG_CONFIG="remote_host=${host_machine_ip}" \
     -e HOST_MACHINE_IP="${host_machine_ip}" \
-    -p "127.0.0.1:29000:9000" \
     --net=hub \
     --name workstation \
     $workstation
