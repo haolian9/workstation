@@ -172,6 +172,18 @@ RUN pip install mycli
 
 # }}}
 
+# go {{{
+RUN pacman -Syy --noconfirm && pacman -S --noconfirm --needed \
+    go go-tools
+
+USER $MY_USERNAME
+RUN cd /tmp && cower -d gometalinter \
+    && cd gometalinter && makepkg $(echo $MY_PKGMAKE_OPT)
+RUN cd /tmp && cower -d delve \
+    && cd delve && makepkg $(echo $MY_PKGMAKE_OPT)
+USER root
+# }}}
+
 # {{{ 善后
 
 RUN pacman -Syu --noconfirm
