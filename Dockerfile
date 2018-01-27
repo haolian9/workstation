@@ -147,7 +147,8 @@ RUN pacman -Syy --noconfirm && pacman -S --noconfirm --needed \
     bind-tools \
     tcpdump \
     sysstat \
-    socat
+    socat \
+    shellcheck
 
 USER $MY_USERNAME
 RUN cd /tmp && cower -d universal-ctags-git \
