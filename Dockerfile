@@ -19,6 +19,8 @@ ENV JID_VERSION="0.7.2"
 ENV PHAN_VERSION="0.8.3"
 # ref https://github.com/phpstan/phpstan/releases
 ENV PHPSTAN_VERSION="0.8.5"
+# ref https://github.com/rgburke/grv/releases
+ENV GRV_VERSION="0.1.1"
 
 COPY ./docker-entrypoint.sh /usr/local/bin/docker-entrypoint.sh
 COPY ./config/mirrorlist /etc/pacman.d/mirrorlist
@@ -168,6 +170,9 @@ RUN cd /tmp && curl -SLO "https://github.com/simeji/jid/releases/download/$JID_V
 
 RUN cd /tmp && curl -SL "https://github.com/github/hub/releases/download/v$HUB_VERSION/hub-linux-amd64-$HUB_VERSION.tgz" | tar xzf - \
     && hub-linux-amd64-$HUB_VERSION/install
+
+RUN cd /tmp && curl -SL "https://github.com/rgburke/grv/releases/download/v${GRV_VERSION}/grv_v${GRV_VERSION}_linux64" -o /usr/local/bin/grv \
+    && chmod +x /usr/local/bin/grv
 
 RUN pip install mycli
 
