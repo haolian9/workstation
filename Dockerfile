@@ -200,6 +200,7 @@ RUN rm -rf /tmp/*
 VOLUME ["/srv/http"]
 VOLUME ["/root"]
 VOLUME ["/home/$MY_USERNAME"]
+VOLUME ["/srv/golang"]
 
 RUN unset MY_USERNAME MY_PASSWD MY_PKGMAKE_OPT
 
