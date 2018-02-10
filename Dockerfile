@@ -187,6 +187,8 @@ RUN cd /tmp && cower -d gometalinter \
     && cd gometalinter && makepkg $(echo $MY_PKGMAKE_OPT)
 RUN cd /tmp && cower -d delve \
     && cd delve && makepkg $(echo $MY_PKGMAKE_OPT)
+RUN cd /tmp && cower -d golang-dep \
+    && cd golang-dep && makepkg $(echo $MY_PKGMAKE_OPT)
 USER root
 # }}}
 
