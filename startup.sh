@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 
-WS_IMG="sangwo/workstation:${WS_IMG:=latest}"
-WS_NAME=${WS_NAME:=workstation}
+WS_IMG="sangwo/workstation:${WS_IMG:-latest}"
+WS_NAME=${WS_NAME:-workstation}
 WS_PATH=$(dirname $(realpath $0))
 # xdebug required
 HOST_MACHINE_IP=$(ip addr show | grep 'inet\b'  | awk '{ print $2 }' | grep -v '^172\|127' | sed 's/\/.*$//')
