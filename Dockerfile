@@ -10,6 +10,7 @@ ENV MY_PASSWD=xx
 ENV MY_PKGMAKE_OPT="-sirc --noconfirm --needed"
 ENV PHP_EXT_MSGPACK_VERSION=2.0.2
 ENV PHP_EXT_SSH_VERSION=1.0
+env PHP_EXT_SWOOLE_VERSION=2.0.1
 
 # ref https://github.com/github/hub/releases
 ENV HUB_VERSION="2.2.9"
@@ -89,10 +90,10 @@ RUN cd /tmp && cower -d php-pear \
 USER root
 
 RUN pecl update-channels && pecl install \
-        swoole \
-        channel://pecl.php.net/msgpack-$PHP_EXT_MSGPACK_VERSION \
+        swoole-$PHP_EXT_SWOOLE_VERSION \
+        msgpack-$PHP_EXT_MSGPACK_VERSION \
         ds \
-        channel://pecl.php.net/ssh2-$PHP_EXT_SSH_VERSION
+        ssh2-$PHP_EXT_SSH_VERSION
 
 # tool
 RUN curl -SL "https://getcomposer.org/composer.phar" -o /usr/local/bin/composer \
