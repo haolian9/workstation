@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-IMG="sangwo/workstation:${tag:-'latest'}"
+IMG="sangwo/workstation:"${tag:-"latest"}
 NAME=${name:-"workstation"}
 
 ROOT=$(dirname $(realpath $0))
