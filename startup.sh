@@ -12,6 +12,8 @@ HOST_IP=$(ip addr show | grep 'inet\b'  | awk '{ print $2 }' | grep -v '^172\|12
     docker rm $NAME
 } &>/dev/null
 
+echo "using image $IMG, and running container be named as $NAME"
+
 docker run -d \
     -v $ROOT/var/haoliang:/home/haoliang \
     -v $ROOT/var/root:/root \
@@ -24,3 +26,9 @@ docker run -d \
     --name $NAME \
     $IMG
 
+if [ $? -eq 0 ]; then
+    echo "everything is fine."
+else
+    echo "just can not start the $NAME"
+    exit 1
+fi
