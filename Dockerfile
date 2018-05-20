@@ -181,15 +181,12 @@ RUN pip install mycli
 
 # go {{{
 RUN pacman -Syy --noconfirm && pacman -S --noconfirm --needed \
-    go go-tools
+    go go-tools \
+    delve dep
 
 USER $MY_USERNAME
-RUN cd /tmp && cower -d gometalinter \
-    && cd gometalinter && makepkg $(echo $MY_PKGMAKE_OPT)
-RUN cd /tmp && cower -d delve \
-    && cd delve && makepkg $(echo $MY_PKGMAKE_OPT)
-RUN cd /tmp && cower -d golang-dep \
-    && cd golang-dep && makepkg $(echo $MY_PKGMAKE_OPT)
+RUN cd /tmp && cower -d gometalinter-git \
+    && cd gometalinter-git && makepkg $(echo $MY_PKGMAKE_OPT)
 USER root
 # }}}
 
