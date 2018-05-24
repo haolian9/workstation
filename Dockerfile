@@ -1,8 +1,3 @@
-#
-# todo
-# * php-pear install from aur
-#
-
 FROM archlinux/base:latest
 
 ENV MY_USERNAME=haoliang
@@ -43,20 +38,20 @@ RUN echo "zh_CN.UTF-8 UTF-8" >> /etc/locale.gen && locale-gen
 # pacman -S base
 RUN pacman -Syy --noconfirm \
     && pacman -S --noconfirm --needed \
-    bash bzip2 coreutils cryptsetup \
-    diffutils file filesystem findutils gawk gcc-libs gettext glibc \
-    grep gzip inetutils iproute2 iputils jfsutils less licenses man-db man-pages \
-    pacman perl procps-ng psmisc reiserfsprogs \
-    sed shadow sysfsutils tar texinfo \
-    device-mapper linux logrotate \
-    util-linux which pkg-config
+    bash bzip2 coreutils \
+    diffutils file filesystem findutils gawk gcc-libs glibc \
+    grep gzip inetutils iproute2 iputils less licenses man-db man-pages \
+    pacman perl procps-ng psmisc \
+    sed shadow sysfsutils tar \
+    util-linux which
 
 # pacman -S base-devel
 RUN pacman -Syy --noconfirm \
     && pacman -S --noconfirm --needed \
-    autoconf automake binutils bison fakeroot file findutils \
-    gawk gcc gettext grep groff \
-    gzip libtool m4 make pacman patch sed sudo texinfo util-linux which
+    autoconf automake binutils findutils \
+    gcc groff \
+    gzip libtool m4 make patch sudo \
+    pkg-config fakeroot
 
 # git, curl
 RUN pacman -Syy --noconfirm \
@@ -77,11 +72,9 @@ USER root
 RUN pacman -Syy --noconfirm && pacman -S --noconfirm --needed \
     php \
     xdebug \
-    php-gd \
     php-intl \
     php-pgsql \
     php-apcu \
-    php-sqlite \
     php-mongodb
 
 USER $MY_USERNAME
@@ -124,7 +117,6 @@ COPY ./config/php/ext/    /etc/php/conf.d/
 # {{{ tools
 
 RUN pacman -Syy --noconfirm && pacman -S --noconfirm --needed \
-    vim \
     neovim \
     python \
     python-neovim \
@@ -156,8 +148,8 @@ RUN pacman -Syy --noconfirm && pacman -S --noconfirm --needed \
 USER $MY_USERNAME
 RUN cd /tmp && cower -d universal-ctags-git \
     && cd universal-ctags-git && makepkg $(echo $MY_PKGMAKE_OPT)
-RUN cd /tmp && cower -d fpp-git \
-    && cd fpp-git && makepkg $(echo $MY_PKGMAKE_OPT)
+RUN cd /tmp && cower -d gotty \
+    && cd gotty && makepkg $(echo $MY_PKGMAKE_OPT)
 USER root
 
 # tools can not be installed by pacman
@@ -210,3 +202,6 @@ ENTRYPOINT ["docker-entrypoint.sh"]
 
 # }}}
 
+# {{{ run as non-privileged user
+USER $MY_USERNAME
+# }}}
