@@ -3,9 +3,6 @@ FROM archlinux/base:latest
 ENV MY_USERNAME=haoliang
 ENV MY_PASSWD=xx
 ENV MY_PKGMAKE_OPT="-sirc --noconfirm --needed"
-ENV PHP_EXT_MSGPACK_VERSION=2.0.2
-ENV PHP_EXT_SSH_VERSION=1.0
-env PHP_EXT_SWOOLE_VERSION=2.0.1
 
 # ref https://github.com/github/hub/releases
 ENV HUB_VERSION="2.2.9"
@@ -63,6 +60,7 @@ USER $MY_USERNAME
 RUN gpg --recv-keys --keyserver hkp://pgp.mit.edu 1EB2638FF56C0C53
 RUN cd /tmp && git clone --depth 1 https://aur.archlinux.org/cower-git.git cower \
     && cd cower && makepkg $(echo $MY_PKGMAKE_OPT)
+COPY ./cower_install.sh /usr/local/bin/cower_install.sh
 USER root
 
 # }}}
@@ -78,15 +76,15 @@ RUN pacman -Syy --noconfirm && pacman -S --noconfirm --needed \
     php-mongodb
 
 USER $MY_USERNAME
-RUN cd /tmp && cower -d php-pear \
-    && cd php-pear && makepkg $(echo $MY_PKGMAKE_OPT)
+RUN cower_install.sh php-pear
+# todo customize --config
+RUN cower_install.sh php-swoole
+RUN cower_install.sh php-msgpack
+# todo PKGBUILD still broken
+#RUN cower_install.sh php-ds
+RUN cower_install.sh php-ssh
+RUN cower_install.sh php-ast
 USER root
-
-RUN pecl update-channels && pecl install \
-        swoole-$PHP_EXT_SWOOLE_VERSION \
-        msgpack-$PHP_EXT_MSGPACK_VERSION \
-        ds \
-        ssh2-$PHP_EXT_SSH_VERSION
 
 # tool
 RUN curl -SL "https://getcomposer.org/composer.phar" -o /usr/local/bin/composer \
@@ -102,9 +100,6 @@ RUN curl -L "https://github.com/phpstan/phpstan/releases/download/$PHPSTAN_VERSI
     && chmod +x /usr/local/bin/phpstan
 
 # modules can not install by pecl
-
-RUN cd /tmp && git clone --depth 1 https://github.com/nikic/php-ast.git php-ast \
-    && cd php-ast && phpize && ./configure && make && make install
 
 RUN cd /tmp && git clone --depth 1 https://github.com/laruence/yac.git php-yac \
     && cd php-yac && phpize && ./configure && make && make install
@@ -146,10 +141,8 @@ RUN pacman -Syy --noconfirm && pacman -S --noconfirm --needed \
     shellcheck
 
 USER $MY_USERNAME
-RUN cd /tmp && cower -d universal-ctags-git \
-    && cd universal-ctags-git && makepkg $(echo $MY_PKGMAKE_OPT)
-RUN cd /tmp && cower -d gotty \
-    && cd gotty && makepkg $(echo $MY_PKGMAKE_OPT)
+RUN cower_install.sh universal-ctags-git
+RUN cower_install.sh gotty
 USER root
 
 # tools can not be installed by pacman
@@ -177,8 +170,7 @@ RUN pacman -Syy --noconfirm && pacman -S --noconfirm --needed \
     delve dep
 
 USER $MY_USERNAME
-RUN cd /tmp && cower -d gometalinter-git \
-    && cd gometalinter-git && makepkg $(echo $MY_PKGMAKE_OPT)
+RUN cower_install.sh gometalinter-git
 USER root
 # }}}
 
