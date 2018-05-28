@@ -80,9 +80,8 @@ RUN cower_install.sh php-pear
 # todo customize --config
 RUN cower_install.sh php-swoole
 RUN cower_install.sh php-msgpack
-# todo PKGBUILD still broken
-#RUN cower_install.sh php-ds
-RUN cower_install.sh php-ssh
+RUN cower_install.sh php-ds-git
+RUN cower_install.sh php-ssh-git
 RUN cower_install.sh php-ast
 USER root
 
