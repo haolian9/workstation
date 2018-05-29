@@ -48,7 +48,7 @@ make_install() {
     }
 
     echo "installing package '$package'"
-    exec makepkg $make_flag
+    eval makepkg $make_flag
 }
 
 main "$@"
