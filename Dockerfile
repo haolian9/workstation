@@ -4,16 +4,10 @@ ENV MY_USERNAME=haoliang
 ENV MY_PASSWD=xx
 ENV MY_PKGMAKE_OPT="-sirc --noconfirm --needed"
 
-# ref https://github.com/github/hub/releases
-ENV HUB_VERSION="2.2.9"
-# ref https://github.com/simeji/jid/releases
-ENV JID_VERSION="0.7.2"
 # ref https://github.com/etsy/phan/releases
-ENV PHAN_VERSION="0.8.3"
+ENV PHAN_VERSION="0.12.10"
 # ref https://github.com/phpstan/phpstan/releases
-ENV PHPSTAN_VERSION="0.8.5"
-# ref https://github.com/rgburke/grv/releases
-ENV GRV_VERSION="0.1.1"
+ENV PHPSTAN_VERSION="0.9.2"
 
 COPY ./docker-entrypoint.sh /usr/local/bin/docker-entrypoint.sh
 COPY ./config/mirrorlist /etc/pacman.d/mirrorlist
@@ -76,13 +70,12 @@ RUN pacman -Syy --noconfirm && pacman -S --noconfirm --needed \
     php-mongodb
 
 USER $MY_USERNAME
-RUN cower_install.sh php-pear
-# todo customize --config
-RUN cower_install.sh php-swoole
-RUN cower_install.sh php-msgpack
-RUN cower_install.sh php-ds-git
-RUN cower_install.sh php-ssh-git
-RUN cower_install.sh php-ast
+# todo customize config of swoole
+RUN cower_install.sh php-swoole \
+    php-msgpack \
+    php-ds-git \
+    php-ssh-git \
+    php-ast
 USER root
 
 # tool
@@ -106,6 +99,16 @@ RUN cd /tmp && git clone --depth 1 https://github.com/laruence/yac.git php-yac \
 COPY ./config/php/php.ini /etc/php/php.ini
 COPY ./config/php/ext/    /etc/php/conf.d/
 
+# }}}
+
+# go {{{
+RUN pacman -Syy --noconfirm && pacman -S --noconfirm --needed \
+    go go-tools \
+    delve dep
+
+USER $MY_USERNAME
+RUN cower_install.sh gometalinter-git
+USER root
 # }}}
 
 # {{{ tools
@@ -140,37 +143,16 @@ RUN pacman -Syy --noconfirm && pacman -S --noconfirm --needed \
     shellcheck
 
 USER $MY_USERNAME
-RUN cower_install.sh universal-ctags-git
-RUN cower_install.sh gotty
+RUN cower_install.sh universal-ctags-git \
+    gotty \
+    jid-bin \
+    grv \
+    git-recent
 USER root
 
-# tools can not be installed by pacman
-
-RUN git clone --depth 1 https://github.com/paulirish/git-recent.git /opt/git-recent \
-    && ln -s /opt/git-recent/git-recent /usr/local/bin/git-recent && chmod +x /usr/local/bin/git-recent
-
-RUN cd /tmp && curl -SLO "https://github.com/simeji/jid/releases/download/$JID_VERSION/jid_linux_amd64.zip" \
-    && 7z x jid_linux_amd64.zip \
-    && cp jid_linux_amd64 /usr/local/bin/jid && chmod +x /usr/local/bin/jid
-
-RUN cd /tmp && curl -SL "https://github.com/github/hub/releases/download/v$HUB_VERSION/hub-linux-amd64-$HUB_VERSION.tgz" | tar xzf - \
-    && hub-linux-amd64-$HUB_VERSION/install
-
-RUN cd /tmp && curl -SL "https://github.com/rgburke/grv/releases/download/v${GRV_VERSION}/grv_v${GRV_VERSION}_linux64" -o /usr/local/bin/grv \
-    && chmod +x /usr/local/bin/grv
-
+# tools can not be installed by pacman/cower
 RUN pip install mycli
 
-# }}}
-
-# go {{{
-RUN pacman -Syy --noconfirm && pacman -S --noconfirm --needed \
-    go go-tools \
-    delve dep
-
-USER $MY_USERNAME
-RUN cower_install.sh gometalinter-git
-USER root
 # }}}
 
 # {{{ 善后

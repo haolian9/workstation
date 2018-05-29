@@ -9,12 +9,27 @@ main() {
         return 1
     }
 
-    local package="${1:?requires package name}"
-
     cd /tmp || {
         >&2 echo "can not cd /tmp"
         return 1
     }
+
+    [ $# -lt 1 ] && {
+        >&2 echo "requires package args"
+        return 1
+    }
+
+    for package; do
+        make_install $package || {
+            >&2 echo "install package ${package} failed."
+            return 1
+        }
+    done
+}
+
+make_install() {
+
+    local package="${1:?requires package name}"
 
     [ -d "$package" ] && {
         >&2 echo "dir '$package' already exists, might the package '$package' already be installed ?"
