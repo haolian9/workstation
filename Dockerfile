@@ -9,8 +9,8 @@ ENV PHAN_VERSION="0.12.10"
 # ref https://github.com/phpstan/phpstan/releases
 ENV PHPSTAN_VERSION="0.9.2"
 
-COPY ./docker-entrypoint.sh /usr/local/bin/docker-entrypoint.sh
-COPY ./config/mirrorlist /etc/pacman.d/mirrorlist
+COPY ./docker/scripts/docker-entrypoint.sh /usr/local/bin/docker-entrypoint.sh
+COPY ./docker/config/mirrorlist /etc/pacman.d/mirrorlist
 
 # {{{ 基本环境
 
@@ -54,7 +54,7 @@ USER $MY_USERNAME
 RUN gpg --recv-keys --keyserver hkp://pgp.mit.edu 1EB2638FF56C0C53
 RUN cd /tmp && git clone --depth 1 https://aur.archlinux.org/cower-git.git cower \
     && cd cower && makepkg $(echo $MY_PKGMAKE_OPT)
-COPY ./cower_install.sh /usr/local/bin/cower_install.sh
+COPY ./docker/scripts/cower_install.sh /usr/local/bin/cower_install.sh
 USER root
 
 # }}}
@@ -96,8 +96,8 @@ RUN curl -L "https://github.com/phpstan/phpstan/releases/download/$PHPSTAN_VERSI
 RUN cd /tmp && git clone --depth 1 https://github.com/laruence/yac.git php-yac \
     && cd php-yac && phpize && ./configure && make && make install
 
-COPY ./config/php/php.ini /etc/php/php.ini
-COPY ./config/php/ext/    /etc/php/conf.d/
+COPY ./docker/config/php/php.ini /etc/php/php.ini
+COPY ./docker/config/php/ext/    /etc/php/conf.d/
 
 # }}}
 
@@ -146,8 +146,7 @@ USER $MY_USERNAME
 RUN cower_install.sh universal-ctags-git \
     gotty \
     jid-bin \
-    grv \
-    git-recent
+    git-recent-git
 USER root
 
 # tools can not be installed by pacman/cower

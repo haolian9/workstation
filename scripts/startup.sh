@@ -1,14 +1,14 @@
 #!/usr/bin/env bash
 
-ROOT=$(dirname $(realpath $0))
+ROOT=$(realpath $(dirname $0)/..)
 
 source $ROOT/scripts/util.sh
 
 #############################################################################
 # configuration
 
-IMG="${image:-sangwo/workstation:latest}"
-NAME=${name:-workstation}
+IMAGE="${image:-sangwo/workstation:latest}"
+CONTAINER=${name:-workstation}
 # todo check port is usable
 PUBLISH_PORT="${publish_port:-127.0.0.0:8000-8002:8000-8002}"
 # xdebug required
@@ -21,8 +21,8 @@ CPU_LIMIT=$(available_cpu ${cpu_percent:-0.8})
 
 clean() {
     {
-        docker stop $NAME
-        docker rm $NAME
+        docker stop $CONTAINER
+        docker rm $CONTAINER
     } &>/dev/null
 
     return 0
@@ -31,7 +31,6 @@ clean() {
 run() {
     docker run -d \
         -v $ROOT/var/haoliang:/home/haoliang \
-        -v $ROOT/var/root:/root \
         -v /srv/http:/srv/http \
         -v /srv/golang:/srv/golang \
         -w /srv/http \
@@ -41,18 +40,18 @@ run() {
         -m "${MEMORY_LIMIT}" \
         --cpus "${CPU_LIMIT}" \
         --net=hub \
-        --name $NAME \
-        $IMG
+        --name $CONTAINER \
+        $IMAGE
 }
 
 main() {
 
     clean
 
-    echo "using image $IMG, and running container be named as $NAME"
+    echo "using image $IMAGE, and running container be named as $CONTAINER"
 
     if ! run; then
-        echo "just can not start the $NAME"
+        echo "just can not start the $CONTAINER"
         return 1
     fi
 

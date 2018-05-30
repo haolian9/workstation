@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-ROOT=$(dirname $(realpath $0))
+ROOT=$(realpath $(dirname $0)/..)
 
 source $ROOT/scripts/util.sh
 
