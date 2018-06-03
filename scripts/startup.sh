@@ -30,33 +30,26 @@ clean() {
 
 run() {
 
-    local volumes=$(printf -- '-v %s -v %s -v %s' \
+    local option=(
+    "$(printf -- '-v %s -v %s -v %s' \
         "$ROOT/var/haoliang:/home/haoliang" \
         "/srv/http:/srv/http" \
-        "/srv/golang:/srv/golang")
-
-    local xdebug=$(printf -- '-e XDEBUG_CONFIG="remote_host=%s"' \
-        "$HOST_IP")
-
-    local resource=$(printf -- '-p %s -m %s --cpus %s' \
+        "/srv/golang:/srv/golang")"
+    "$(printf -- '-e XDEBUG_CONFIG="remote_host=%s"' \
+        "$HOST_IP")"
+    "$(printf -- '-p %s -m %s --cpus %s' \
         "$PUBLISH_PORT" \
         "$MEMORY_LIMIT" \
-        "$CPU_LIMIT")
-
+        "$CPU_LIMIT")"
     # see https://github.com/derekparker/delve/issues/515
-    local dlv="--security-opt=seccomp:unconfined"
+    "--security-opt=seccomp:unconfined"
+    "$(printf -- "-e HOST_IP=%s" \
+        "$HOST_IP")"
+    "-d -w /srv/http --net=hub"
+    "--name ${CONTAINER} ${IMAGE}"
+    )
 
-    local env=$(printf -- "-e HOST_IP=%s" \
-        "$HOST_IP")
-
-    local docker_option=$(printf -- "-d -w /srv/http --net=hub %s %s %s %s %s --name ${CONTAINER} ${IMAGE}" \
-        "$volumes" \
-        "$xdebug" \
-        "$dlv" \
-        "$env" \
-        "$resource")
-
-    eval docker run $docker_option
+    eval docker run "${option[@]}"
 }
 
 main() {
