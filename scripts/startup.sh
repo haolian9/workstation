@@ -10,7 +10,7 @@ source $ROOT/scripts/util.sh
 IMAGE="${image:-sangwo/workstation:latest}"
 CONTAINER=${name:-workstation}
 # todo check port is usable
-PUBLISH_PORT="${publish_port:-127.0.0.0:8000-8002:8000-8002}"
+PUBLISH_PORT="${publish_port:-8000:8000}"
 # xdebug required
 HOST_IP="${host_ip:-$(determine_local_ip || exit 1)}"
 MEMORY_LIMIT=$(available_memory ${memory_percent:-0.8} || exit 1)
@@ -37,15 +37,17 @@ run() {
         "/srv/golang:/srv/golang")"
     "$(printf -- '-e XDEBUG_CONFIG="remote_host=%s"' \
         "$HOST_IP")"
-    "$(printf -- '-p %s -m %s --cpus %s' \
-        "$PUBLISH_PORT" \
+    "$(printf -- '-p %s'\
+        "$PUBLISH_PORT" )"
+    "$(printf -- '-m %s --cpus %s' \
         "$MEMORY_LIMIT" \
         "$CPU_LIMIT")"
     # see https://github.com/derekparker/delve/issues/515
     "--security-opt=seccomp:unconfined"
     "$(printf -- "-e HOST_IP=%s" \
         "$HOST_IP")"
-    "-d -w /srv/http --net=hub"
+    "-d -w /srv/http"
+    "--net=hub"
     "--name ${CONTAINER} ${IMAGE}"
     )
 
