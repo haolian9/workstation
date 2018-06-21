@@ -161,19 +161,17 @@ RUN pacman -Syu --noconfirm
 RUN pacman -Scc --noconfirm
 RUN rm -rf /tmp/*
 
+# fixme
+# see https://github.com/moby/moby/issues/3465#issuecomment-356988520
+#unset MY_USERNAME MY_PASSWD MY_PKGMAKE_OPT
+
 VOLUME ["/srv/http"]
 VOLUME ["/root"]
 VOLUME ["/home/$MY_USERNAME"]
 VOLUME ["/srv/golang"]
 
-RUN unset MY_USERNAME MY_PASSWD MY_PKGMAKE_OPT
-
 WORKDIR /srv/http
-
+USER $MY_USERNAME
 ENTRYPOINT ["docker-entrypoint.sh"]
 
-# }}}
-
-# {{{ run as non-privileged user
-USER $MY_USERNAME
 # }}}
