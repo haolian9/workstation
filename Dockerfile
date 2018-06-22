@@ -117,7 +117,6 @@ RUN pacman -Syy --noconfirm && pacman -S --noconfirm --needed \
     neovim \
     python \
     python-neovim \
-    python-pip \
     zsh \
     grml-zsh-config \
     tmux \
@@ -148,9 +147,6 @@ RUN cower_install.sh universal-ctags-git \
     jid-bin \
     git-recent-git
 USER root
-
-# tools can not be installed by pacman/cower
-RUN pip install mycli
 
 # }}}
 
