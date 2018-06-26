@@ -139,7 +139,8 @@ RUN pacman -Syy --noconfirm && pacman -S --noconfirm --needed \
     tcpdump \
     sysstat \
     socat \
-    shellcheck
+    shellcheck \
+    strace
 
 USER $MY_USERNAME
 RUN cower_install.sh universal-ctags-git \
