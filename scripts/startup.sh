@@ -31,23 +31,27 @@ clean() {
 run() {
 
     local option=(
-    "$(printf -- '-v %s -v %s -v %s' \
-        "$ROOT/var/haoliang:/home/haoliang" \
-        "/srv/http:/srv/http" \
-        "/srv/golang:/srv/golang")"
-    "$(printf -- '-e XDEBUG_CONFIG="remote_host=%s"' \
-        "$HOST_IP")"
-    "$(printf -- '-p %s'\
-        "$PUBLISH_PORT" )"
-    "$(printf -- '-m %s --cpus %s' \
-        "$MEMORY_LIMIT" \
-        "$CPU_LIMIT")"
+
+    # volume
+    "-v $ROOT/var/haoliang:/home/haoliang"
+    "-v /srv/http"
+    "-v /srv/golang"
+    "-v /srv/playground"
+
+    # resource limitation
+    "-m $MEMORY_LIMIT"
+    "--cpus $CPU_LIMIT"
+
     # see https://github.com/derekparker/delve/issues/515
     "--security-opt=seccomp:unconfined"
-    "$(printf -- "-e HOST_IP=%s" \
-        "$HOST_IP")"
-    "-d -w /srv/http"
+
+    # misc
+    "-e HOST_IP=$HOST_IP"
+    "-e XDEBUG_CONFIG='remote_host=$HOST_IP'" \
+    "-p $PUBLISH_PORT"
     "--net=hub"
+    "-d -w /srv/http"
+
     "--name ${CONTAINER} ${IMAGE}"
     )
 
