@@ -34,9 +34,9 @@ run() {
 
     # volume
     "-v $ROOT/var/haoliang:/home/haoliang"
-    "-v /srv/http"
-    "-v /srv/golang"
-    "-v /srv/playground"
+    "-v /srv/http:/srv/http"
+    "-v /srv/golang:/srv/golang"
+    "-v /srv/playground:/srv/playground"
 
     # resource limitation
     "-m $MEMORY_LIMIT"
