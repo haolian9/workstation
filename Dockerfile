@@ -53,7 +53,6 @@ RUN pacman -Syy --noconfirm \
     curl
 
 USER $MY_USERNAME
-RUN gpg --recv-keys --keyserver hkp://pgp.mit.edu 1EB2638FF56C0C53
 RUN cd /tmp && git clone --depth 1 https://aur.archlinux.org/cower-git.git cower \
     && cd cower && makepkg $(echo $MY_PKGMAKE_OPT)
 COPY ./docker/scripts/cower_install.sh /usr/local/bin/cower_install.sh
