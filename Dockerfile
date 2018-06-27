@@ -8,7 +8,7 @@ ENV MY_PKGMAKE_OPT="-sirc --noconfirm --needed"
 ENV PHAN_VERSION="0.12.10"
 # ref https://github.com/phpstan/phpstan/releases
 ENV PHPSTAN_VERSION="0.9.2"
-ENV YAC_VERSION = "2.0.2"
+ENV YAC_VERSION="2.0.2"
 ENV SWOOLE_VERSION="4.0.1"
 
 COPY ./docker/scripts/docker-entrypoint.sh /usr/local/bin/docker-entrypoint.sh
@@ -93,7 +93,7 @@ RUN curl -L "https://github.com/phpstan/phpstan/releases/download/$PHPSTAN_VERSI
     && chmod +x /usr/local/bin/phpstan
 
 # ext
-RUN cd /tmp && git clone -b "yac-${YAC_VERSION}" --single-branch --depth 1 "ttps://github.com/laruence/yac.git" \
+RUN cd /tmp && git clone -b "yac-${YAC_VERSION}" --single-branch --depth 1 "https://github.com/laruence/yac.git" \
     && cd yac && phpize && ./configure && make && make install
 
 RUN cd /tmp && git clone -b "v${SWOOLE_VERSION}" --single-branch --depth 1 "https://github.com/swoole/swoole-src.git" \
