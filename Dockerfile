@@ -8,6 +8,8 @@ ENV MY_PKGMAKE_OPT="-sirc --noconfirm --needed"
 ENV PHAN_VERSION="0.12.10"
 # ref https://github.com/phpstan/phpstan/releases
 ENV PHPSTAN_VERSION="0.9.2"
+ENV YAC_VERSION = "2.0.2"
+ENV SWOOLE_VERSION="4.0.1"
 
 COPY ./docker/scripts/docker-entrypoint.sh /usr/local/bin/docker-entrypoint.sh
 COPY ./docker/config/mirrorlist /etc/pacman.d/mirrorlist
@@ -91,10 +93,14 @@ RUN curl -L "https://github.com/etsy/phan/releases/download/$PHAN_VERSION/phan.p
 RUN curl -L "https://github.com/phpstan/phpstan/releases/download/$PHPSTAN_VERSION/phpstan.phar" -o /usr/local/bin/phpstan \
     && chmod +x /usr/local/bin/phpstan
 
-# modules can not install by pecl
+# ext
+RUN cd /tmp && git clone -b "yac-${YAC_VERSION}" --single-branch --depth 1 "ttps://github.com/laruence/yac.git" \
+    && cd yac && phpize && ./configure && make && make install
 
-RUN cd /tmp && git clone --depth 1 https://github.com/laruence/yac.git php-yac \
-    && cd php-yac && phpize && ./configure && make && make install
+RUN cd /tmp && git clone -b "v${SWOOLE_VERSION}" --single-branch --depth 1 "https://github.com/swoole/swoole-src.git" \
+    && cd swoole-src && git submodule update \
+    && phpize && ./configure --enable-sockets --enable-openssl --enable-http2 --enable-async-hiredis \
+    && make && make install
 
 COPY ./docker/config/php/php.ini /etc/php/php.ini
 COPY ./docker/config/php/ext/    /etc/php/conf.d/
