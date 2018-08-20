@@ -13,12 +13,12 @@ determine_local_ip() {
         ip_list+=("$my_ip")
     done
 
-    if [ "${#ip_list[@]}" -gt 1 ]; then
+    if [ "${#ip_list[@]}" -ne 1 ]; then
         >&2 echo "can not determine the ip, found: ${ip_list[*]}"
         return 1
     fi
 
-    echo ${ip_list[0]}
+    echo "${ip_list[*]}"
 }
 
 available_memory() {
