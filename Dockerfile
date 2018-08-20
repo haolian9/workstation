@@ -1,8 +1,6 @@
-FROM archlinux/base:latest
+FROM sangwo/archlinux:latest
 
 ENV MY_USERNAME=haoliang
-ENV MY_PASSWD=xx
-ENV MY_PKGMAKE_OPT="-sirc --noconfirm --needed"
 
 # ref https://github.com/etsy/phan/releases
 ENV PHAN_VERSION="0.12.10"
@@ -12,53 +10,6 @@ ENV YAC_VERSION="2.0.2"
 ENV SWOOLE_VERSION="4.0.1"
 
 COPY ./docker/scripts/docker-entrypoint.sh /usr/local/bin/docker-entrypoint.sh
-COPY ./docker/config/mirrorlist /etc/pacman.d/mirrorlist
-
-# {{{ 基本环境
-
-# {{{ create a normal user
-RUN pacman -Syy --noconfirm \
-    && pacman -S --noconfirm --needed sudo
-RUN echo '%wheel ALL=(ALL) NOPASSWD: ALL' >> /etc/sudoers
-RUN useradd -m -u 1000 -g users -G wheel $MY_USERNAME
-RUN yes $MY_PASSWD | passwd $MY_USERNAME
-# }}}
-
-# 本地化
-RUN ln -sf /usr/share/zoneinfo/Asia/Shanghai /etc/localtime
-RUN echo "zh_CN.UTF-8 UTF-8" >> /etc/locale.gen && locale-gen
-
-# pacman -S base
-RUN pacman -Syy --noconfirm \
-    && pacman -S --noconfirm --needed \
-    bash bzip2 coreutils \
-    diffutils file filesystem findutils gawk gcc-libs glibc \
-    grep gzip inetutils iproute2 iputils less licenses man-db man-pages \
-    pacman perl procps-ng psmisc \
-    sed shadow sysfsutils tar \
-    util-linux which
-
-# pacman -S base-devel
-RUN pacman -Syy --noconfirm \
-    && pacman -S --noconfirm --needed \
-    autoconf automake binutils findutils \
-    gcc groff \
-    gzip libtool m4 make patch sudo \
-    pkg-config fakeroot
-
-# git, curl
-RUN pacman -Syy --noconfirm \
-    && pacman -S --noconfirm --needed \
-    git \
-    curl
-
-USER $MY_USERNAME
-RUN cd /tmp && git clone --depth 1 https://aur.archlinux.org/cower-git.git cower \
-    && cd cower && makepkg $(echo $MY_PKGMAKE_OPT)
-COPY ./docker/scripts/cower_install.sh /usr/local/bin/cower_install.sh
-USER root
-
-# }}}
 
 # {{{ php
 
@@ -165,7 +116,7 @@ RUN rm -rf /tmp/*
 
 # fixme
 # see https://github.com/moby/moby/issues/3465#issuecomment-356988520
-#unset MY_USERNAME MY_PASSWD MY_PKGMAKE_OPT
+#unset MY_USERNAME
 
 VOLUME ["/srv/http"]
 VOLUME ["/root"]
