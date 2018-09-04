@@ -34,9 +34,11 @@ run() {
 
     # volume
     "-v $ROOT/var/haoliang:/home/haoliang"
+    # todo just mount `/srv` ?
     "-v /srv/http:/srv/http"
     "-v /srv/golang:/srv/golang"
     "-v /srv/playground:/srv/playground"
+    "-v /srv/python:/srv/python"
 
     # resource limitation
     "-m $MEMORY_LIMIT"
