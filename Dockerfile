@@ -67,11 +67,15 @@ RUN cower_install.sh gometalinter-git
 USER root
 # }}}
 
+# python {{{
+RUN pacman -Syy --noconfirm && pacman -S --noconfirm --needed \
+    python python-pycodestyle flake8
+# }}}
+
 # {{{ tools
 
 RUN pacman -Syy --noconfirm && pacman -S --noconfirm --needed \
     neovim \
-    python \
     python-neovim \
     zsh \
     grml-zsh-config \
