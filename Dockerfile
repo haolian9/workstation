@@ -109,6 +109,11 @@ RUN cower_install.sh universal-ctags-git \
     git-recent-git
 USER root
 
+# db client/shell
+RUN pip install mycli
+RUN pacman -Syy --noconfirm && pacman -S --noconfirm --needed \
+    mongodb mongodb-tools
+
 # }}}
 
 # {{{ 善后
