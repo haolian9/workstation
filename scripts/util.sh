@@ -40,3 +40,21 @@ available_cpu() {
 
     printf "%.1f" $(echo "$total * $percent" | bc -l)
 }
+
+is_container_existed() {
+    local container=${1:?requires container name}
+
+    [ -n "$(docker ps -a --quiet --filter="name=$container")" ]
+}
+
+is_container_running() {
+    local container=${1:?requires container name}
+
+    [ -n "$(docker ps --quiet --filter="name=$container")" ]
+}
+
+is_container_stopped() {
+    local container=${1:?requires container name}
+
+    docker ps -a --filter="name=$container" | tail -n -1 | grep -v '\bUp\b' &>/dev/null
+}

@@ -10,7 +10,7 @@ source $ROOT/scripts/util.sh
 IMAGE="${image:-sangwo/workstation:latest}"
 CONTAINER=${name:-workstation}
 # todo check port is usable
-PUBLISH_PORT="${publish_port:-8000:8000}"
+PUBLISH_PORT="${publish_port:-127.0.0.1:8000:8000}"
 # xdebug required
 HOST_IP="${host_ip:-$(determine_local_ip || exit 1)}"
 MEMORY_LIMIT=$(available_memory ${memory_percent:-0.8} || exit 1)
@@ -18,6 +18,10 @@ CPU_LIMIT=$(available_cpu ${cpu_percent:-0.8})
 
 #############################################################################
 # main
+
+logger() {
+    >&2 echo "[$(date '+%H:%M:%S')] $*"
+}
 
 clean() {
     {
@@ -62,16 +66,30 @@ run() {
 
 main() {
 
-    clean
+    case "$1" in
+        run|start|"")
+            if is_container_existed "$CONTAINER"; then
+                if is_container_running "$CONTAINER"; then
+                    logger "$CONTAINER was running already"
+                    return 0
+                else
+                    clean
+                fi
+            fi
+            logger "using image $IMAGE, and running container with name $CONTAINER"
+            if run; then
+                logger "succeeded to start $CONTAINER"
+            else
+                logger "failed to start $CONTAINER"
+                return 1
+            fi
+            ;;
+        stop|down)
+            logger "cleaning container instance"
+            clean
+            ;;
+    esac
 
-    echo "using image $IMAGE, and running container be named as $CONTAINER"
-
-    if ! run; then
-        echo "just can not start the $CONTAINER"
-        return 1
-    fi
-
-    echo "everything is fine."
 }
 
-cd $ROOT && main
+cd $ROOT && main "$@"
