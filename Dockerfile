@@ -101,7 +101,8 @@ RUN pacman -Syy --noconfirm && pacman -S --noconfirm --needed \
     socat \
     shellcheck \
     strace \
-    stow
+    stow \
+    inotify-tools
 
 USER $MY_USERNAME
 RUN cower_install.sh universal-ctags-git \
