@@ -69,7 +69,9 @@ USER root
 
 # python {{{
 RUN pacman -Syy --noconfirm && pacman -S --noconfirm --needed \
-    python python-pip python-pycodestyle flake8 python-jedi mypy
+    python \
+    python-pip python-pipenv python-wheel \
+    python-pycodestyle flake8 python-jedi mypy
 # }}}
 
 # {{{ tools
