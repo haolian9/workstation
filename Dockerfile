@@ -9,7 +9,7 @@ ENV PHPSTAN_VERSION="0.9.2"
 ENV YAC_VERSION="2.0.2"
 ENV SWOOLE_VERSION="4.0.1"
 
-COPY ./docker/scripts/docker-entrypoint.sh /usr/local/bin/docker-entrypoint.sh
+COPY ./docker/scripts/ /usr/local/bin/docker_entrypoint/
 
 # {{{ php
 
@@ -138,6 +138,6 @@ VOLUME ["/srv/golang"]
 
 WORKDIR /srv/http
 USER $MY_USERNAME
-ENTRYPOINT ["docker-entrypoint.sh"]
+ENTRYPOINT ["docker_entrypoint"]
 
 # }}}

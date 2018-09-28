@@ -8,6 +8,12 @@ why
 
 每次配置开发环境、同步修改非常麻烦，特别是有多台机子或云主机的时候.
 
+todo
+---
+
+* dockerfile linter
+
+
 特别设定
 ---
 
@@ -35,7 +41,7 @@ scripts
 脚本做了好多个性化的设定，你可能不想直接使用它
 
 * daemon.sh 绑定了一些设置, 方便控制公开端口、限制内存、处理器的使用
-* attatch.sh 方便进入运行中的容器
+* attach.sh 方便进入运行中的容器
 * build.sh 绑定了proxy设置
 * makefile 上面这三个不太好记，放在makefile里, 方便调用
 * 由于 make 必须在 makefile 的目录内执行，增加了 workstation.sh 来提供同等的功能

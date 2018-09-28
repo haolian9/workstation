@@ -7,3 +7,5 @@ var/
 *.swp
 .netrwhist
 tags
+
+nohup.out

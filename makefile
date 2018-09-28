@@ -8,8 +8,8 @@ build: scripts/build.sh
 daemon: scripts/startup.sh
 	@ scripts/startup.sh
 
-attatch: scripts/attatch.sh
-	@ scripts/attatch.sh
+attach: scripts/attach.sh
+	@ scripts/attach.sh
 
 clean: scripts/clean.sh
 	@ scripts/clean.sh
