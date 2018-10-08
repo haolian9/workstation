@@ -9,7 +9,7 @@ ENV PHPSTAN_VERSION="0.9.2"
 ENV YAC_VERSION="2.0.2"
 ENV SWOOLE_VERSION="4.0.1"
 
-COPY ./docker/scripts/ /usr/local/bin/docker_entrypoint/
+COPY ./docker/scripts/ /usr/local/bin
 
 # {{{ php
 
