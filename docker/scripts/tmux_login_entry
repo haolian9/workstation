@@ -15,8 +15,8 @@ fi
 
 session=default
 
-if tmux has "$session" &>/dev/null; then
-    exec tmux attatch -t "$session"
+if tmux has -t "$session" &>/dev/null; then
+    exec tmux attach -t "$session"
 else
     exec tmux new -s "$session"
 fi
