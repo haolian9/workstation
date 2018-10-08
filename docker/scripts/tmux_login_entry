@@ -1,7 +1,23 @@
 #!/usr/bin/env zsh
+#
+# magic keyword
+# * default
+#
 
 for conf in /etc/zsh/zshrc $HOME/.zshrc; do
     [ -f "$conf" ] && source $conf
 done
 
-tmux attach -t "${1:-default}"
+session="$1"
+if [ -n "$session" ]; then
+    exec tmux attach -t "$session"
+fi
+
+session=default
+
+if tmux has "$session" &>/dev/null; then
+    exec tmux attatch -t "$session"
+else
+    exec tmux new -s "$session"
+fi
+
