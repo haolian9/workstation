@@ -12,6 +12,20 @@ logger() {
     command -v notify-send &>/dev/null && notify-send "$(basename $0)" "$text"
 }
 
+print_usage() {
+    cat <<'EOF'
+SYNOPSIS
+    <this> urxvt|session|attach|start|stop|restart [<args>...]
+
+SUBCOMMANDS
+    attach [<command>...]:    attatch to workstation container in the current terminal
+    urxvt [<command>...]:     attach to workstation container in a standalone urxvt terminal with zsh shell
+    session [<session-name>]: attach to workstation container in a standalone urxvt terminal with tmux session
+    start|stop|restart:       start, stop or restart the workstation daemon
+    help|h:                   show this help
+EOF
+}
+
 main() {
 
     cd $ROOT || {
@@ -43,6 +57,9 @@ main() {
             ;;
         restart)
             $ROOT/daemon.sh stop && $ROOT/daemon.sh start
+            ;;
+        help|h)
+            print_usage
             ;;
         *)
             >&2 echo "unsupport operation"
