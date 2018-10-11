@@ -8,16 +8,8 @@ for conf in /etc/zsh/zshrc $HOME/.zshrc; do
     [ -f "$conf" ] && source $conf
 done
 
-session="$1"
-if [ -n "$session" ]; then
-    exec tmux attach -t "$session"
-fi
-
-session=default
-
-if tmux has -t "$session" &>/dev/null; then
-    exec tmux attach -t "$session"
+if [ $# -le 0 ]; then
+    exec tmux new -c $HOME -As default
 else
-    exec tmux new -s "$session"
+    exec tmux attach -t "$@"
 fi
-
