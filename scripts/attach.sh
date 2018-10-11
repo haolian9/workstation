@@ -18,10 +18,14 @@ main() {
         set -- zsh
     fi
 
-    exec docker exec -it $CONTAINER "$@"
+    exec docker exec $INTERACTIVE_TTY $CONTAINER "$@"
 }
 
 ROOT=$(dirname $(realpath "$0"))
 CONTAINER=${container:-workstation}
+
+if [ -z "${INTERACTIVE_TTY+x}" ]; then
+    INTERACTIVE_TTY="-it"
+fi
 
 source $ROOT/util.sh && main "$@"
