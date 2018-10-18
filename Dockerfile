@@ -118,6 +118,9 @@ RUN pip install mycli
 RUN pacman -Syy --noconfirm && pacman -S --noconfirm --needed \
     mongodb mongodb-tools
 
+RUN cd /tmp && git clone --depth 1 https://gitlab.com/haoliang-aur/fpp-git.git \
+    && cd fpp-git && makepkg -sirc --noconfirm
+
 # }}}
 
 # {{{ 善后
