@@ -71,7 +71,7 @@ USER root
 RUN pacman -Syy --noconfirm && pacman -S --noconfirm --needed \
     python \
     python-pip python-wheel \
-    python-pycodestyle flake8 mypy \
+    python-pylint python-rope flake8 mypy bandit \
     ipython
 # }}}
 
@@ -115,7 +115,9 @@ RUN cower_install.sh universal-ctags-git \
 USER root
 
 # db client/shell
-RUN pip install mycli
+# USER $MY_USERNAME
+# RUN pip install --user mycli
+# USER root
 RUN pacman -Syy --noconfirm && pacman -S --noconfirm --needed \
     mongodb mongodb-tools
 
