@@ -71,7 +71,8 @@ USER root
 RUN pacman -Syy --noconfirm && pacman -S --noconfirm --needed \
     python \
     python-pip python-wheel \
-    python-pycodestyle flake8 mypy
+    python-pycodestyle flake8 mypy \
+    ipython
 # }}}
 
 # {{{ tools
