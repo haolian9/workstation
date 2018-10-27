@@ -71,7 +71,7 @@ USER root
 RUN pacman -Syy --noconfirm && pacman -S --noconfirm --needed \
     python \
     python-pip python-wheel \
-    python-pylint python-rope flake8 mypy bandit \
+    python-pylint flake8 mypy bandit \
     ipython
 # }}}
 
