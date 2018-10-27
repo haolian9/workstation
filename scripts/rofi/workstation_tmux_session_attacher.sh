@@ -46,6 +46,6 @@ main() {
 
 ROOT=$(dirname $(realpath $0))
 UTIL_DIR=$(realpath $ROOT/..)
-MUTEX=${MUTEX:-0}
+MUTEX=${MUTEX:-1}
 
 main "$@"

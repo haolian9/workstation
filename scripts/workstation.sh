@@ -1,15 +1,7 @@
 #!/usr/bin/env bash
 
 logger() {
-    local text="$*"
-
-    [ -z "$text" ] && return
-
-    text="[$(date '+%H:%M:%S')] $text"
-
-    >&2 echo "$text"
-
-    command -v notify-send &>/dev/null && notify-send "$(basename $0)" "$text"
+    _logger "workstation" "$@"
 }
 
 print_usage() {
@@ -36,14 +28,12 @@ main() {
     case "$1" in
         urxvt|"")
             shift
-            nohup urxvt -e $ROOT/attach.sh "$@" &
-            logger "record nohup output to $(pwd)/nohup.out"
+            nohup urxvt -e $ROOT/attach.sh "$@" &>/dev/null &
             ;;
         session)
             shift
             set -- /usr/local/bin/tmux_login_entry "$@"
-            nohup urxvt -e $ROOT/attach.sh "$@" &
-            logger "record nohup output to $(pwd)/nohup.out"
+            nohup urxvt -e $ROOT/attach.sh "$@" &>/dev/null &
             ;;
         attach)
             shift
@@ -71,4 +61,4 @@ main() {
 
 readonly ROOT="$(dirname $(realpath "$0"))"
 
-main "$@"
+source $ROOT/util.sh && main "$@"

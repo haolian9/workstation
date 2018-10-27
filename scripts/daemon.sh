@@ -19,10 +19,6 @@ CPU_LIMIT=$(available_cpu ${cpu_percent:-0.8})
 #############################################################################
 # main
 
-logger() {
-    >&2 echo "[$(date '+%H:%M:%S')] $*"
-}
-
 clean() {
     {
         docker stop $CONTAINER

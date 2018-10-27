@@ -12,6 +12,7 @@ todo
 ---
 
 * dockerfile linter
+* scripts/attach.sh MUTEX did not work
 
 
 特别设定
