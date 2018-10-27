@@ -1,23 +1,7 @@
 #!/usr/bin/env bash
 
-ROOT=$(realpath "$(dirname $(realpath $0))/..")
-
-source $ROOT/scripts/util.sh
-
 #############################################################################
-# configuration
-
-IMAGE="${image:-sangwo/workstation:latest}"
-CONTAINER=${name:-workstation}
-# todo check port is usable
-PUBLISH_PORT="${publish_port:-127.0.0.1:8000:8000}"
-# xdebug required
-HOST_IP="${host_ip:-$(determine_local_ip || exit 1)}"
-MEMORY_LIMIT=$(available_memory ${memory_percent:-0.8} || exit 1)
-CPU_LIMIT=$(available_cpu ${cpu_percent:-0.8})
-
-#############################################################################
-# main
+# func
 
 clean() {
     {
@@ -33,7 +17,7 @@ run() {
     local option=(
 
     # volume
-    "-v $ROOT/var/haoliang:/home/haoliang"
+    "-v $PROJECT_ROOT/var/haoliang:/home/haoliang"
     # todo just mount `/srv` ?
     "-v /srv/http:/srv/http"
     "-v /srv/golang:/srv/golang"
@@ -88,4 +72,22 @@ main() {
 
 }
 
-cd $ROOT && main "$@"
+#############################################################################
+# configuration
+
+readonly ROOT=$(dirname $(realpath $0))
+readonly PROJECT_ROOT=$(realpath "$ROOT/..")
+
+source $ROOT/util.sh || exit 1
+
+IMAGE="${image:-sangwo/workstation:latest}"
+CONTAINER=${name:-workstation}
+
+# todo check port is usable
+PUBLISH_PORT="${publish_port:-127.0.0.1:8000:8000}"
+# xdebug required
+HOST_IP="${host_ip:-$(determine_local_ip || exit 1)}"
+MEMORY_LIMIT=$(available_memory ${memory_percent:-0.8} || exit 1)
+CPU_LIMIT=$(available_cpu ${cpu_percent:-0.8})
+
+ cd $PROJECT_ROOT && main "$@"

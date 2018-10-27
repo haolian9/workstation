@@ -21,7 +21,10 @@ main() {
     exec docker exec $INTERACTIVE_TTY $CONTAINER "$@"
 }
 
-ROOT=$(dirname $(realpath "$0"))
+#############################################################################
+# definition
+
+readonly ROOT=$(dirname $(realpath "$0"))
 CONTAINER=${container:-workstation}
 
 if [ -z "${INTERACTIVE_TTY+x}" ]; then
