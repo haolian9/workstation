@@ -72,7 +72,7 @@ RUN pacman -Syy --noconfirm && pacman -S --noconfirm --needed \
     python \
     python-pip python-wheel \
     python-pylint flake8 mypy bandit \
-    ipython
+    ipython python-pipenv
 # }}}
 
 # {{{ tools
@@ -106,7 +106,9 @@ RUN pacman -Syy --noconfirm && pacman -S --noconfirm --needed \
     strace \
     stow \
     inotify-tools \
-    netcat
+    netcat \
+    ansible ansible-lint \
+    colordiff
 
 USER $MY_USERNAME
 RUN cower_install.sh universal-ctags-git \
@@ -116,9 +118,6 @@ RUN cower_install.sh universal-ctags-git \
 USER root
 
 # db client/shell
-# USER $MY_USERNAME
-# RUN pip install --user mycli
-# USER root
 RUN pacman -Syy --noconfirm && pacman -S --noconfirm --needed \
     mongodb mongodb-tools
 
