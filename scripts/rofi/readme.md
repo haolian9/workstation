@@ -2,7 +2,7 @@
 plugins for rofi:
 ---
 
-* attach_tmux_session: you can select all tmux session existed in workstation container from rofi, and attach the session in a new urxvt window
+* attach_tmux_session: you can select all tmux session existed in workstation container from rofi, and attach the session in a new terminal window
 
 usage
 ---

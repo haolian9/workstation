@@ -7,12 +7,12 @@ logger() {
 print_usage() {
     cat <<'EOF'
 SYNOPSIS
-    <this> urxvt|session|attach|start|stop|restart [<args>...]
+    <this> terminal|session|attach|start|stop|restart [<args>...]
 
 SUBCOMMANDS
     attach [<command>...]:    attatch to workstation container in the current terminal
-    urxvt [<command>...]:     attach to workstation container in a standalone urxvt terminal with zsh shell
-    session [<session-name>]: attach to workstation container in a standalone urxvt terminal with tmux session
+    terminal [<command>...]:     attach to workstation container in a standalone terminal window with zsh shell
+    session [<session-name>]: attach to workstation container in a standalone terminal window with tmux session
     start|stop|restart:       start, stop or restart the workstation daemon
     help|h:                   show this help
 EOF
@@ -26,14 +26,14 @@ main() {
     }
 
     case "$1" in
-        urxvt|"")
+        terminal|"")
             shift
-            nohup urxvt -e $ROOT/attach.sh "$@" &>/dev/null &
+            nohup $TERMINAL -e $ROOT/attach.sh "$@" &>/dev/null &
             ;;
         session)
             shift
             set -- /usr/local/bin/tmux_login_entry "$@"
-            nohup urxvt -e $ROOT/attach.sh "$@" &>/dev/null &
+            nohup $TERMINAL -e $ROOT/attach.sh "$@" &>/dev/null &
             ;;
         attach)
             shift
@@ -60,5 +60,6 @@ main() {
 }
 
 readonly ROOT="$(dirname $(realpath "$0"))"
+readonly TERMINAL=${TERMINAL:-alacritty}
 
 source $ROOT/util.sh && main "$@"

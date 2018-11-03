@@ -1,9 +1,5 @@
 #!/usr/bin/env bash
 
-running_in_urxvt() {
-    [ "$(ps -o comm= -p "$(($(ps -o ppid= -p "$(($(ps -o sid= -p "$$")))")))")" = "urxvt" ]
-}
-
 main() {
 
     is_container_running "$CONTAINER" || {
