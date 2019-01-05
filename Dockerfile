@@ -2,12 +2,9 @@ FROM sangwo/archlinux:latest
 
 ENV MY_USERNAME=haoliang
 
-# ref https://github.com/etsy/phan/releases
-ENV PHAN_VERSION="0.12.10"
 # ref https://github.com/phpstan/phpstan/releases
-ENV PHPSTAN_VERSION="0.9.2"
-ENV YAC_VERSION="2.0.2"
-ENV SWOOLE_VERSION="4.0.1"
+ENV PHPSTAN_VERSION="0.10.7"
+ENV SWOOLE_VERSION="4.2.12"
 
 COPY ./docker/scripts/ /usr/local/bin
 
@@ -17,16 +14,13 @@ RUN pacman -Syy --noconfirm && pacman -S --noconfirm --needed \
     php \
     xdebug \
     php-intl \
-    php-pgsql \
-    php-apcu \
     php-mongodb
 
 USER $MY_USERNAME
 # todo customize config of swoole
 RUN cower_install.sh php-swoole \
     php-ds-git \
-    php-ssh-git \
-    php-ast
+    php-ssh-git
 USER root
 
 # tool
@@ -36,20 +30,8 @@ RUN curl -SL "https://getcomposer.org/composer.phar" -o /usr/local/bin/composer 
 RUN curl -SsL "http://static.phpmd.org/php/latest/phpmd.phar" -o /usr/local/bin/phpmd \
     && chmod +x /usr/local/bin/phpmd
 
-RUN curl -L "https://github.com/etsy/phan/releases/download/$PHAN_VERSION/phan.phar" -o /usr/local/bin/phan \
-    && chmod +x /usr/local/bin/phan
-
 RUN curl -L "https://github.com/phpstan/phpstan/releases/download/$PHPSTAN_VERSION/phpstan.phar" -o /usr/local/bin/phpstan \
     && chmod +x /usr/local/bin/phpstan
-
-# ext
-RUN cd /tmp && git clone -b "yac-${YAC_VERSION}" --single-branch --depth 1 "https://github.com/laruence/yac.git" \
-    && cd yac && phpize && ./configure && make && make install
-
-RUN cd /tmp && git clone -b "v${SWOOLE_VERSION}" --single-branch --depth 1 "https://github.com/swoole/swoole-src.git" \
-    && cd swoole-src && git submodule update \
-    && phpize && ./configure --enable-sockets --enable-openssl --enable-http2 --enable-async-hiredis \
-    && make && make install
 
 COPY ./docker/config/php/php.ini /etc/php/php.ini
 COPY ./docker/config/php/ext/    /etc/php/conf.d/
@@ -71,7 +53,7 @@ RUN pacman -Syy --noconfirm && pacman -S --noconfirm --needed \
     python \
     python-pip python-wheel \
     python-pylint flake8 mypy bandit \
-    ipython python-pipenv
+    ipython
 # }}}
 
 # {{{ tools
@@ -90,6 +72,7 @@ RUN pacman -Syy --noconfirm && pacman -S --noconfirm --needed \
     lsof \
     jq \
     mariadb-clients \
+    mongodb-tools \
     whois \
     vifm \
     tree \
@@ -116,11 +99,6 @@ RUN cower_install.sh universal-ctags-git \
     jid-bin \
     git-recent-git
 USER root
-
-# db client/shell
-RUN pacman -Syy --noconfirm && pacman -S --noconfirm --needed \
-    mongodb mongodb-tools
-
 
 USER $MY_USERNAME
 RUN cd /tmp && git clone --depth 1 https://gitlab.com/haoliang-aur/fpp-git.git \
