@@ -107,7 +107,8 @@ RUN pacman -Syy --noconfirm && pacman -S --noconfirm --needed \
     inotify-tools \
     netcat \
     ansible ansible-lint \
-    colordiff
+    colordiff \
+    mosh
 
 USER $MY_USERNAME
 RUN cower_install.sh universal-ctags-git \
