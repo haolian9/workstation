@@ -72,7 +72,6 @@ RUN pacman -Syy --noconfirm && pacman -S --noconfirm --needed \
     lsof \
     jq \
     mariadb-clients \
-    mongodb-tools \
     whois \
     vifm \
     tree \
@@ -91,13 +90,16 @@ RUN pacman -Syy --noconfirm && pacman -S --noconfirm --needed \
     netcat \
     ansible ansible-lint \
     colordiff \
-    mosh
+    mosh \
+    time
 
 USER $MY_USERNAME
 RUN cower_install.sh universal-ctags-git \
     gotty \
     jid-bin \
-    git-recent-git
+    git-recent-git \
+    tabview-git \
+    mongodb-tools
 USER root
 
 USER $MY_USERNAME
