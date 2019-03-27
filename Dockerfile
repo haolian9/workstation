@@ -98,8 +98,7 @@ RUN cower_install.sh universal-ctags-git \
     gotty \
     jid-bin \
     git-recent-git \
-    tabview-git \
-    mongodb-tools
+    tabview-git
 USER root
 
 USER $MY_USERNAME
