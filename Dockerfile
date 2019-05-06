@@ -2,8 +2,6 @@ FROM sangwo/archlinux:latest
 
 ENV MY_USERNAME=haoliang
 
-# ref https://github.com/phpstan/phpstan/releases
-ENV PHPSTAN_VERSION="0.10.7"
 ENV SWOOLE_VERSION="4.2.12"
 
 COPY ./docker/scripts/ /usr/local/bin
@@ -27,12 +25,6 @@ USER root
 RUN curl -SL "https://getcomposer.org/composer.phar" -o /usr/local/bin/composer \
     && chmod +x /usr/local/bin/composer
 
-RUN curl -SsL "http://static.phpmd.org/php/latest/phpmd.phar" -o /usr/local/bin/phpmd \
-    && chmod +x /usr/local/bin/phpmd
-
-RUN curl -L "https://github.com/phpstan/phpstan/releases/download/$PHPSTAN_VERSION/phpstan.phar" -o /usr/local/bin/phpstan \
-    && chmod +x /usr/local/bin/phpstan
-
 COPY ./docker/config/php/php.ini /etc/php/php.ini
 COPY ./docker/config/php/ext/    /etc/php/conf.d/
 
@@ -52,7 +44,7 @@ USER root
 RUN pacman -Syy --noconfirm && pacman -S --noconfirm --needed \
     python \
     python-pip python-wheel \
-    python-pylint flake8 mypy bandit \
+    python-pylint flake8 mypy \
     ipython
 # }}}
 
@@ -96,9 +88,7 @@ RUN pacman -Syy --noconfirm && pacman -S --noconfirm --needed \
 USER $MY_USERNAME
 RUN cower_install.sh universal-ctags-git \
     gotty \
-    jid-bin \
-    git-recent-git \
-    tabview-git
+    git-recent-git
 USER root
 
 USER $MY_USERNAME
