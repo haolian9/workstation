@@ -16,9 +16,7 @@ RUN pacman -Syy --noconfirm && pacman -S --noconfirm --needed \
 
 USER $MY_USERNAME
 # todo customize config of swoole
-RUN cower_install.sh php-swoole \
-    php-ds-git \
-    php-ssh-git
+RUN cower_install.sh php-swoole
 USER root
 
 # tool
