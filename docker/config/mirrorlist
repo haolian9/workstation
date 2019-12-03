@@ -1,6 +1,6 @@
-# us
-Server = http://ca.us.mirror.archlinux-br.org/$repo/os/$arch
-Server = http://il.us.mirror.archlinux-br.org/$repo/os/$arch
+# international
+Server = https://mirror.rackspace.com/archlinux/
+Server = http://mirrors.evowise.com/archlinux/
 
 # china
 Server = http://mirrors.163.com/archlinux/$repo/os/$arch
