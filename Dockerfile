@@ -40,7 +40,7 @@ USER root
 
 # python #{{{
 RUN pacman -Syy --noconfirm && pacman -S --noconfirm --needed \
-    python python-doc \
+    python python-docs \
     python-pip python-wheel \
     python-pylint flake8 mypy \
     ipython \
