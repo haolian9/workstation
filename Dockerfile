@@ -2,26 +2,21 @@ FROM sangwo/archlinux:latest
 
 ENV MY_USERNAME=haoliang
 
-ENV SWOOLE_VERSION="4.2.12"
-
 COPY ./docker/scripts/ /usr/local/bin
 
 # #{{{ php
 
-RUN pacman -Syy --noconfirm && pacman -S --noconfirm --needed \
+RUN pacman -Sy --noconfirm && pacman -S --noconfirm --needed \
     php \
     xdebug \
     php-intl \
-    php-mongodb
+    php-mongodb \
+    composer
 
 USER $MY_USERNAME
 # todo customize config of swoole
 RUN cower_install.sh php-swoole
 USER root
-
-# tool
-RUN curl -SL "https://getcomposer.org/composer.phar" -o /usr/local/bin/composer \
-    && chmod +x /usr/local/bin/composer
 
 COPY ./docker/config/php/php.ini /etc/php/php.ini
 COPY ./docker/config/php/ext/    /etc/php/conf.d/
@@ -29,7 +24,7 @@ COPY ./docker/config/php/ext/    /etc/php/conf.d/
 # #}}}
 
 # go #{{{
-RUN pacman -Syy --noconfirm && pacman -S --noconfirm --needed \
+RUN pacman -Sy --noconfirm && pacman -S --noconfirm --needed \
     go go-tools \
     delve dep
 
@@ -39,7 +34,7 @@ USER root
 # #}}}
 
 # python #{{{
-RUN pacman -Syy --noconfirm && pacman -S --noconfirm --needed \
+RUN pacman -Sy --noconfirm && pacman -S --noconfirm --needed \
     python python-docs \
     python-pip python-wheel \
     python-pylint flake8 mypy \
@@ -49,51 +44,50 @@ RUN pacman -Syy --noconfirm && pacman -S --noconfirm --needed \
 
 # #{{{ tools
 
-RUN pacman -Syy --noconfirm && pacman -S --noconfirm --needed \
-    neovim \
-    python-neovim \
-    zsh \
-    grml-zsh-config \
-    tmux \
-    the_silver_searcher \
-    autojump \
-    fzf \
-    openssh \
-    openssl \
-    lsof \
-    jq \
-    mariadb-clients \
-    whois \
-    vifm \
-    tree \
-    bc \
-    p7zip \
-    dos2unix \
+# essential
+RUN pacman -Sy --noconfirm && pacman -S --noconfirm --needed \
     traceroute \
     bind-tools \
     tcpdump \
     sysstat \
     socat \
-    shellcheck \
     strace \
-    stow \
     inotify-tools \
     netcat \
-    ansible ansible-lint \
-    colordiff \
+    openssh \
+    openssl \
+    lsof \
+    whois \
     mosh \
     time \
-    proxychains-ng
+    colordiff
+
+# flow
+RUN pacman -Sy --noconfirm && pacman -S --noconfirm --needed \
+    neovim python-neovim \
+    zsh grml-zsh-config \
+    tmux \
+    the_silver_searcher \
+    fzf \
+    shellcheck ctags \
+    jq \
+    vifm \
+    stow \
+    z
+
+# standalone
+RUN pacman -Sy --noconfirm && pacman -S --noconfirm --needed \
+    mariadb-clients \
+    tree \
+    bc \
+    p7zip \
+    dos2unix \
+    proxychains-ng \
+    ansible ansible-lint
 
 USER $MY_USERNAME
-RUN cower_install.sh universal-ctags-git \
-    gotty \
-    git-recent-git
-USER root
-
-USER $MY_USERNAME
-RUN cd /tmp && git clone --depth 1 https://gitlab.com/haoliang-aur/fpp-git.git \
-    && cd fpp-git && makepkg -sirc --noconfirm
+RUN cower_install.sh gotty
+RUN cower_install.sh fpp-git
 USER root
 
 # #}}}

@@ -1,7 +1,7 @@
 what
 ---
 
-{tools, env} for {php, go, shell} development
+{tools, env} for {python, php, go, shell} development
 
 why
 ---
