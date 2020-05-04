@@ -4,25 +4,6 @@ ENV MY_USERNAME=haoliang
 
 COPY ./docker/scripts/ /usr/local/bin
 
-# #{{{ php
-
-RUN pacman -Sy --noconfirm && pacman -S --noconfirm --needed \
-    php \
-    xdebug \
-    php-intl \
-    php-mongodb \
-    composer
-
-USER $MY_USERNAME
-# todo customize config of swoole
-RUN cower_install.sh php-swoole
-USER root
-
-COPY ./docker/config/php/php.ini /etc/php/php.ini
-COPY ./docker/config/php/ext/    /etc/php/conf.d/
-
-# #}}}
-
 # go #{{{
 RUN pacman -Sy --noconfirm && pacman -S --noconfirm --needed \
     go go-tools \
