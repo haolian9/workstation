@@ -10,7 +10,7 @@ RUN pacman -Sy --noconfirm && pacman -S --noconfirm --needed \
     delve dep
 
 USER $MY_USERNAME
-RUN cower_install.sh gometalinter-git
+RUN cower_install.sh golangci-lint-bin
 USER root
 # #}}}
 
